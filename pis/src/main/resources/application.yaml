@@ -1,0 +1,16 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=pis;encrypt=true;trustServerCertificate=true
+    username: SA
+    password: Password789
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServerDialect
+    hibernate:
+      ddl-auto: none  # T?o b?ng t? ??ng (create, update, validate, none)
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true  # ??nh d?ng câu SQL d? ??c h?n
