@@ -1,5 +1,7 @@
 server:
   port: 8080
+  servlet:
+    context-path: /api/v1
 spring:
   datasource:
     url: jdbc:sqlserver://localhost:1433;databaseName=pis;encrypt=true;trustServerCertificate=true
@@ -9,8 +11,15 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.SQLServerDialect
     hibernate:
-      ddl-auto: none  # T?o b?ng t? ??ng (create, update, validate, none)
+      ddl-auto: none  # create, update, validate, none
     show-sql: true
     properties:
       hibernate:
-        format_sql: true  # ??nh d?ng câu SQL d? ??c h?n
+        format_sql: true
+
+jwt:
+  signerKey: "YqvUBDFkYwvZFFKHHRoePHueiKAmrVdubXLJQbP04rfshwdSjnI7KDUq/IIQCCVO"
+
+
+
+#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
