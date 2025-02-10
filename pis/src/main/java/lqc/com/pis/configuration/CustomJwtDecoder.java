@@ -3,7 +3,7 @@ package lqc.com.pis.configuration;
 import java.util.Objects;
 
 import com.nimbusds.jose.JOSEException;
-import lqc.com.pis.dto.request.IntrospectRequest;
+import lqc.com.pis.dto.request.auth.IntrospectRequest;
 import lqc.com.pis.service.inter.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

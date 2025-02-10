@@ -17,9 +17,35 @@ spring:
       hibernate:
         format_sql: true
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: kendyle2702@gmail.com
+    password: ogvf fphi uyzc wbyy
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: your-google-client-id
+            client-secret: your-google-client-secret
+            scope:
+              - email
+              - profile
+
+
+
 jwt:
   signerKey: "YqvUBDFkYwvZFFKHHRoePHueiKAmrVdubXLJQbP04rfshwdSjnI7KDUq/IIQCCVO"
 
 
 
 #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
+#ogvf fphi uyzc wbyy

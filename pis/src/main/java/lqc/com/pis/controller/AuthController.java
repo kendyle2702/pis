@@ -4,13 +4,10 @@ import com.nimbusds.jose.JOSEException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lqc.com.pis.dto.request.IntrospectRequest;
-import lqc.com.pis.dto.request.LoginRequest;
-import lqc.com.pis.dto.request.UserCreationRequest;
+import lombok.extern.slf4j.Slf4j;
+import lqc.com.pis.dto.request.auth.*;
 import lqc.com.pis.dto.response.ApiResponse;
-import lqc.com.pis.dto.response.IntrospectResponse;
-import lqc.com.pis.dto.response.LoginResponse;
-import lqc.com.pis.entity.User;
+import lqc.com.pis.dto.response.auth.*;
 import lqc.com.pis.service.inter.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +21,18 @@ import java.text.ParseException;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthController {
     AuthService authService;
 
     @PostMapping("/register")
-    ResponseEntity<ApiResponse<User>> register(@RequestBody UserCreationRequest userCreationRequest) {
-        return null;
+    ResponseEntity<ApiResponse<RegisterAccountResponse>> register(@RequestBody RegisterAccountRequest registerAccountRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ApiResponse.<RegisterAccountResponse>builder()
+                        .code(2001)
+                        .data(authService.register(registerAccountRequest)).build()
+        );
     }
 
     @PostMapping("/login")
@@ -50,4 +52,39 @@ public class AuthController {
                         .data(authService.introspect(introspectRequest)).build()
         );
     }
+
+    @PostMapping("/logout")
+    ResponseEntity<ApiResponse<Void>> logout(@RequestBody LogoutRequest logoutRequest) throws ParseException, JOSEException {
+        authService.logout(logoutRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<Void>builder().code(2000).message("Logout success").build());
+    }
+
+    @PostMapping("/forgot-password")
+    ResponseEntity<ApiResponse<ForgotPasswordResponse>> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest){
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<ForgotPasswordResponse>builder()
+                .code(2000)
+                .data(authService.forgotPassword(forgotPasswordRequest)).build());
+    }
+
+    @PostMapping("/reset-password")
+    ResponseEntity<ApiResponse<ResetPasswordResponse>> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<ResetPasswordResponse>builder()
+                .code(2000)
+                .data(authService.resetPassword(resetPasswordRequest)).build());
+    }
+
+    @PostMapping("/update-password")
+    ResponseEntity<ApiResponse<Void>> updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        authService.updatePassword(updatePasswordRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<Void>builder()
+                .code(2000)
+                .message("update password success")
+                .build());
+    }
+
+
+//
+//    @PostMapping("/update-password")
+
+
 }

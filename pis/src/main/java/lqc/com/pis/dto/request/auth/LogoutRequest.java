@@ -1,4 +1,4 @@
-package lqc.com.pis.dto.request;
+package lqc.com.pis.dto.request.auth;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LoginRequest {
-    String username;
-    String password;
+public class LogoutRequest {
+    String token;
 }

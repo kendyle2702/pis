@@ -1,4 +1,4 @@
-package lqc.com.pis.dto.request;
+package lqc.com.pis.dto.request.auth;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,9 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IntrospectRequest {
-    String token;
+public class UpdatePasswordRequest {
+    private String email;
+    private String password;
 }
