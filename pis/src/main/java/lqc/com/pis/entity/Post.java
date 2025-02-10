@@ -14,7 +14,6 @@ import java.time.Instant;
 @Table(name = "post")
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id", nullable = false)
     private Integer id;
 
@@ -30,10 +29,6 @@ public class Post {
     @Lob
     @Column(name = "content")
     private String content;
-
-    @Nationalized
-    @Column(name = "url")
-    private String url;
 
     @Nationalized
     @Column(name = "mode", nullable = false, length = 50)

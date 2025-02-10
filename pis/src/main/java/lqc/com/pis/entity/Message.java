@@ -14,7 +14,6 @@ import java.time.Instant;
 @Table(name = "message")
 public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_id", nullable = false)
     private Integer id;
 
@@ -29,6 +28,10 @@ public class Message {
     @Nationalized
     @Column(name = "type", nullable = false, length = 50)
     private String type;
+
+    @Nationalized
+    @Column(name = "url")
+    private String url;
 
     @Nationalized
     @Lob

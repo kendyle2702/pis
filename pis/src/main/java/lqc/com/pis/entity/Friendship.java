@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Nationalized;
 
 @Getter
 @Setter
@@ -23,10 +22,6 @@ public class Friendship {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "friend_id", nullable = false)
     private User friend;
-
-    @Nationalized
-    @Column(name = "friend_type", nullable = false, length = 50)
-    private String friendType;
 
     @ColumnDefault("0")
     @Column(name = "is_friend")

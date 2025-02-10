@@ -150,6 +150,10 @@ public class AuthServiceImpl implements AuthService {
             //send otp
             User user = userRepository.findByEmail(forgotPasswordRequest.getEmail()).orElseThrow(()->new AppException(ErrorCode.USER_NOT_EXISTED));
 
+            if(!user.getIsActive()){
+                throw new AppException(ErrorCode.USER_BANNED);
+            }
+
             Random random = new Random();
             int otp = random.nextInt(900000) + 100000;
             user.setOtp(String.valueOf(otp));

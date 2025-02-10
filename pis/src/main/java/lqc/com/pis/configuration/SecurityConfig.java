@@ -18,7 +18,9 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/auth/login", "/auth/introspect", "/auth/logout","/auth/register","auth/forgot-password", "auth/reset-password", "auth/update-password"
+            "/auth/login", "/auth/introspect", "/auth/logout","/auth/register"
+            ,"auth/forgot-password", "auth/reset-password", "auth/update-password",
+            "/upload"
     };
     @Autowired
     private CustomJwtDecoder customJwtDecoder;

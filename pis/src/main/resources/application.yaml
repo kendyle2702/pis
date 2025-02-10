@@ -3,6 +3,11 @@ server:
   servlet:
     context-path: /api/v1
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 15MB
   datasource:
     url: jdbc:sqlserver://localhost:1433;databaseName=pis;encrypt=true;trustServerCertificate=true
     username: SA
@@ -29,16 +34,10 @@ spring:
           starttls:
             enable: true
             required: true
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: your-google-client-id
-            client-secret: your-google-client-secret
-            scope:
-              - email
-              - profile
+azure:
+  storage:
+    connection-string: "DefaultEndpointsProtocol=https;AccountName=pisnewcontainer;AccountKey=gBlvX0fMIRhySg3Xy1u8vT3BCVV7lD/HRcuxhnWM3dyuYEAlilU1Dr8mZAgV7dW7EluN2Bz4mW+G+AStld/IXA==;EndpointSuffix=core.windows.net"
+    container-name: "image"
 
 
 
