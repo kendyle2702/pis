@@ -81,10 +81,4 @@ public class AuthController {
                 .message("update password success")
                 .build());
     }
-
-
-//
-//    @PostMapping("/update-password")
-
-
 }

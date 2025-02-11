@@ -27,18 +27,14 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String uploadFile(MultipartFile file) throws IOException {
-        // Tạo tên file duy nhất
         String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
 
-        // Lấy reference đến blob
         BlobClient blobClient = containerClient.getBlobClient(fileName);
 
-        // Upload file lên Azure Blob Storage
         try (InputStream inputStream = file.getInputStream()) {
             blobClient.upload(inputStream, file.getSize(), true);
         }
 
-        // Trả về URL của file đã upload
         return blobClient.getBlobUrl();
     }
 }

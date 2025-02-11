@@ -1,4 +1,4 @@
-package lqc.com.pis.dto.request;
+package lqc.com.pis.dto.request.user;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,17 +12,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
-    String username;
     String firstName;
     String lastName;
-    String phoneNumber;
     String email;
-    String avatar;
-    String qrCode;
     LocalDate birthday;
-    String hashPassword;
     Boolean isActive;
-    Boolean isLogin;
-    Integer loginAttempts;
-    String otp;
 }

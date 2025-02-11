@@ -1,17 +1,16 @@
 package lqc.com.pis.service.inter;
 
-import lqc.com.pis.dto.request.UserCreationRequest;
-import lqc.com.pis.dto.request.UserUpdateRequest;
-import lqc.com.pis.dto.response.ApiResponse;
+import lqc.com.pis.dto.request.user.UserUpdateRequest;
+import lqc.com.pis.dto.response.user.UserUpdateResponse;
 import lqc.com.pis.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
-    User createUser(UserCreationRequest userCreationRequest);
     User getUserById(Long id);
-    User updateUser(Long id, UserUpdateRequest userUpdateRequest);
-    void deleteUserById(Long id);
     List<User> getUsers();
-
+    UserUpdateResponse updateUserPartial(Long userId, UserUpdateRequest userUpdateRequest);
+    UserUpdateResponse updateAvatar(Long userId, MultipartFile avatarFile) throws IOException;
 }

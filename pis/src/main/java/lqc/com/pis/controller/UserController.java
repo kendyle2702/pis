@@ -3,16 +3,18 @@ package lqc.com.pis.controller;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lqc.com.pis.dto.request.UserCreationRequest;
-import lqc.com.pis.dto.request.UserUpdateRequest;
+import lqc.com.pis.dto.request.user.UserUpdateRequest;
 import lqc.com.pis.dto.response.ApiResponse;
+import lqc.com.pis.dto.response.user.UserUpdateResponse;
+import lqc.com.pis.service.inter.FileService;
 import lqc.com.pis.service.inter.UserService;
 import lqc.com.pis.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -22,15 +24,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
     UserService userService;
-
-    @PostMapping
-    ResponseEntity<ApiResponse<User>> addUser(@RequestBody UserCreationRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                ApiResponse.<User>builder()
-                        .code(2001)
-                        .data(userService.createUser(request)).build()
-        );
-    }
 
     @GetMapping
     ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
@@ -50,18 +43,21 @@ public class UserController {
         );
     }
 
-    @PutMapping("/{userId}")
-    ResponseEntity<ApiResponse<User>> updateUserById(@PathVariable("userId") Long userId, @RequestBody UserUpdateRequest request) {
+    @PatchMapping("/{userId}")
+    ResponseEntity<ApiResponse<UserUpdateResponse>> updateUserPartial(@PathVariable("userId") Long userId, @RequestBody UserUpdateRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<User>builder()
+                ApiResponse.<UserUpdateResponse>builder()
                         .code(2000)
-                        .data(userService.updateUser(userId,request)).build()
+                        .data(userService.updateUserPartial(userId,request)).build()
         );
     }
 
-    @DeleteMapping("/{userId}")
-    ResponseEntity<Void> deleteUserById(@PathVariable("userId") Long userId) {
-        userService.deleteUserById(userId);
-        return ResponseEntity.noContent().build();
+    @PostMapping("/avatar/{userId}")
+    public ResponseEntity<ApiResponse<UserUpdateResponse>> updateAvatar(@PathVariable("userId") Long userId, @RequestParam("file") MultipartFile file) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<UserUpdateResponse>builder()
+                        .code(2000)
+                        .data(userService.updateAvatar(userId,file)).build()
+        );
     }
 }
