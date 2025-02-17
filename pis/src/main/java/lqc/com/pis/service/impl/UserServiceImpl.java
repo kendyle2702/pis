@@ -4,11 +4,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lqc.com.pis.dto.request.user.UserUpdateRequest;
+import lqc.com.pis.dto.response.profile.FollowResponse;
 import lqc.com.pis.dto.response.user.UserUpdateResponse;
 import lqc.com.pis.entity.User;
 import lqc.com.pis.exception.AppException;
 import lqc.com.pis.exception.ErrorCode;
 import lqc.com.pis.mapper.UserMapper;
+import lqc.com.pis.repository.FriendShipRepository;
 import lqc.com.pis.repository.UserRepository;
 import lqc.com.pis.service.inter.FileService;
 import lqc.com.pis.service.inter.UserService;
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     UserMapper userMapper;
     FileService fileService;
+    FriendShipRepository friendShipRepository;
 
     @Override
     public User getUserById(Long id) {
@@ -71,6 +74,19 @@ public class UserServiceImpl implements UserService {
 
         user.setAvatar(url);
 
+        userRepository.save(user);
+
         return userMapper.toUserUpdateResponse(user);
+    }
+
+    @Override
+    public FollowResponse getFollow(Long userId) {
+        Long followers = friendShipRepository.countByUserIdAndFriendType(userId,"FOLLOW");
+        Long following = friendShipRepository.countByFriendIdAndFriendType(userId,"FOLLOW");
+
+        return FollowResponse.builder()
+                .followers(Math.toIntExact(followers))
+                .followingNumbers(Math.toIntExact(following))
+                .build();
     }
 }

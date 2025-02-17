@@ -15,6 +15,10 @@ public enum ErrorCode {
     UNAUTHENTICATED(4006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(4007, "You do not have permission", HttpStatus.FORBIDDEN),
     USER_BANNED(4008, "User banned or deleted", HttpStatus.BAD_REQUEST),
+
+    COMMENT_NOT_EXISTED(4009, "Comment not existed", HttpStatus.NOT_FOUND),
+    NOT_HAVE_CONVERSATION(4010, "Not have conversation", HttpStatus.BAD_REQUEST),
+    NOT_HAVE_REACTION(4011, "Not have reaction", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

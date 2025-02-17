@@ -47,6 +47,7 @@ public class AuthServiceImpl implements AuthService {
     EmailService emailService;
 
     UserMapper userMapper;
+
     private final UserService userService;
 
     @NonFinal

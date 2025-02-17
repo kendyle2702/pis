@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lqc.com.pis.dto.request.user.UserUpdateRequest;
 import lqc.com.pis.dto.response.ApiResponse;
+import lqc.com.pis.dto.response.profile.FollowResponse;
 import lqc.com.pis.dto.response.user.UserUpdateResponse;
 import lqc.com.pis.service.inter.FileService;
 import lqc.com.pis.service.inter.UserService;
@@ -60,4 +61,13 @@ public class UserController {
                         .data(userService.updateAvatar(userId,file)).build()
         );
     }
+    @GetMapping("/follow/{userId}")
+    ResponseEntity<ApiResponse<FollowResponse>> getFollowing(@PathVariable("userId") Long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<FollowResponse>builder()
+                        .code(2000)
+                        .data(userService.getFollow(userId)).build()
+        );
+    }
+
 }

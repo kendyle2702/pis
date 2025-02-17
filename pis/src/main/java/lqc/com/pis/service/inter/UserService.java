@@ -1,6 +1,7 @@
 package lqc.com.pis.service.inter;
 
 import lqc.com.pis.dto.request.user.UserUpdateRequest;
+import lqc.com.pis.dto.response.profile.FollowResponse;
 import lqc.com.pis.dto.response.user.UserUpdateResponse;
 import lqc.com.pis.entity.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,4 +14,6 @@ public interface UserService {
     List<User> getUsers();
     UserUpdateResponse updateUserPartial(Long userId, UserUpdateRequest userUpdateRequest);
     UserUpdateResponse updateAvatar(Long userId, MultipartFile avatarFile) throws IOException;
+
+    FollowResponse getFollow(Long userId);
 }

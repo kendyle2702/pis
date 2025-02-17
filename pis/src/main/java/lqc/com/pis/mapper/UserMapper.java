@@ -3,6 +3,7 @@ package lqc.com.pis.mapper;
 import lqc.com.pis.dto.request.auth.RegisterAccountRequest;
 import lqc.com.pis.dto.request.user.UserUpdateRequest;
 import lqc.com.pis.dto.response.auth.RegisterAccountResponse;
+import lqc.com.pis.dto.response.user.UserResponse;
 import lqc.com.pis.dto.response.user.UserUpdateResponse;
 import lqc.com.pis.entity.User;
 import org.mapstruct.Mapper;
@@ -19,4 +20,6 @@ public interface UserMapper {
     RegisterAccountResponse toRegisterAccountResponse(User user);
 
     UserUpdateResponse toUserUpdateResponse(User user);
+
+    UserResponse toUserResponse(User user);
 }
