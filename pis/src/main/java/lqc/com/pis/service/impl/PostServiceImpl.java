@@ -207,7 +207,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void likePost(PostReactionRequest reactionRequest) {
+    public ReactionResponse likePost(PostReactionRequest reactionRequest) {
         User user = entityManager.getReference(User.class, reactionRequest.getUserId());
         Post post = entityManager.getReference(Post.class, reactionRequest.getPostId());
 
@@ -218,10 +218,14 @@ public class PostServiceImpl implements PostService {
                 .createdAt(Instant.now())
                 .build();
         reactionRepository.save(reaction);
+
+        return ReactionResponse.builder()
+                .numberLike(Math.toIntExact(reactionRepository.countByPostId(Long.valueOf(reactionRequest.getPostId()))))
+                .build();
     }
 
     @Override
-    public void disLikePost(PostReactionRequest reactionRequest) {
+    public ReactionResponse disLikePost(PostReactionRequest reactionRequest) {
         boolean isExit = reactionRepository.existsByPostIdAndUserId(reactionRequest.getPostId(), reactionRequest.getUserId());
         if (isExit) {
             reactionRepository.deleteByPostIdAndUserId(reactionRequest.getPostId(), reactionRequest.getUserId());
@@ -229,10 +233,13 @@ public class PostServiceImpl implements PostService {
         else{
             throw new AppException(ErrorCode.NOT_HAVE_REACTION);
         }
+        return ReactionResponse.builder()
+                .numberLike(Math.toIntExact(reactionRepository.countByPostId(Long.valueOf(reactionRequest.getPostId()))))
+                .build();
     }
 
     @Override
-    public void likeComment(CommentReactionRequest commentReactionRequest) {
+    public ReactionResponse likeComment(CommentReactionRequest commentReactionRequest) {
         User user = entityManager.getReference(User.class, commentReactionRequest.getUserId());
         Comment comment = entityManager.getReference(Comment.class, commentReactionRequest.getCommentId());
 
@@ -243,10 +250,14 @@ public class PostServiceImpl implements PostService {
                 .createdAt(Instant.now())
                 .build();
         reactionRepository.save(reaction);
+        return ReactionResponse.builder()
+                .numberLike(Math.toIntExact(reactionRepository.countByCommentId(Long.valueOf(commentReactionRequest.getCommentId()))))
+                .build();
     }
 
     @Override
-    public void disLikeComment(CommentReactionRequest commentReactionRequest) {
+    public ReactionResponse disLikeComment(CommentReactionRequest commentReactionRequest) {
+
         boolean isExit = reactionRepository.existsByCommentIdAndUserId(commentReactionRequest.getCommentId(), commentReactionRequest.getUserId());
         if (isExit) {
             reactionRepository.deleteByCommentIdAndUserId(commentReactionRequest.getCommentId(), commentReactionRequest.getUserId());
@@ -254,6 +265,9 @@ public class PostServiceImpl implements PostService {
         else{
             throw new AppException(ErrorCode.NOT_HAVE_REACTION);
         }
+        return ReactionResponse.builder()
+                .numberLike(Math.toIntExact(reactionRepository.countByCommentId(Long.valueOf(commentReactionRequest.getCommentId()))))
+                .build();
     }
 
     private String timeAgo(Instant createTime) {

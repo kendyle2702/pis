@@ -60,7 +60,7 @@ public class ChatServiceImpl implements ChatService {
 
                 return sortedMessageList.stream().map(message -> MessageResponse
                         .builder()
-                        .userId(Math.toIntExact(receiveId))
+                        .userId(message.getSender().getId())
                         .avatar(message.getSender().getAvatar())
                         .content(message.getContent())
                         .type(message.getType())
@@ -81,7 +81,7 @@ public class ChatServiceImpl implements ChatService {
 
             return sortedMessageList.stream().map(message -> MessageResponse
                     .builder()
-                    .userId(Math.toIntExact(receiveId))
+                    .userId(message.getSender().getId())
                     .avatar(message.getSender().getAvatar())
                     .content(message.getContent())
                     .type(message.getType())

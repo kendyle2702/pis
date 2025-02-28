@@ -4,10 +4,7 @@ import lqc.com.pis.dto.request.post.CommentLevel1Request;
 import lqc.com.pis.dto.request.post.CommentLevel2Request;
 import lqc.com.pis.dto.request.post.CommentReactionRequest;
 import lqc.com.pis.dto.request.post.PostReactionRequest;
-import lqc.com.pis.dto.response.post.CommentLevel1Response;
-import lqc.com.pis.dto.response.post.CommentLevel2Response;
-import lqc.com.pis.dto.response.post.PostResponse;
-import lqc.com.pis.dto.response.post.PublicPostResponse;
+import lqc.com.pis.dto.response.post.*;
 
 import java.util.List;
 
@@ -24,8 +21,8 @@ public interface PostService {
 
     PostResponse getPostById(Long postId);
 
-    void likePost(PostReactionRequest reactionRequest);
-    void disLikePost(PostReactionRequest reactionRequest);
-    void likeComment(CommentReactionRequest commentReactionRequest);
-    void disLikeComment(CommentReactionRequest commentReactionRequest);
+    ReactionResponse likePost(PostReactionRequest reactionRequest);
+    ReactionResponse disLikePost(PostReactionRequest reactionRequest);
+    ReactionResponse likeComment(CommentReactionRequest commentReactionRequest);
+    ReactionResponse disLikeComment(CommentReactionRequest commentReactionRequest);
 }

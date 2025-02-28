@@ -9,10 +9,7 @@ import lqc.com.pis.dto.request.post.CommentLevel2Request;
 import lqc.com.pis.dto.request.post.CommentReactionRequest;
 import lqc.com.pis.dto.request.post.PostReactionRequest;
 import lqc.com.pis.dto.response.ApiResponse;
-import lqc.com.pis.dto.response.post.CommentLevel1Response;
-import lqc.com.pis.dto.response.post.CommentLevel2Response;
-import lqc.com.pis.dto.response.post.PostResponse;
-import lqc.com.pis.dto.response.post.PublicPostResponse;
+import lqc.com.pis.dto.response.post.*;
 import lqc.com.pis.service.inter.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -84,41 +81,42 @@ public class PostController {
     }
 
     @PostMapping("/like")
-    ResponseEntity<ApiResponse<Void>> likePost(@RequestBody PostReactionRequest request) {
-        postService.likePost(request);
+    ResponseEntity<ApiResponse<ReactionResponse>> likePost(@RequestBody PostReactionRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<Void>builder()
+                ApiResponse.<ReactionResponse>builder()
                         .code(2001)
+                        .data(postService.likePost(request))
                         .message("Like Success").build()
         );
     }
 
     @PostMapping("/dislike")
-    ResponseEntity<ApiResponse<Void>> unLikePost(@RequestBody PostReactionRequest request) {
-        postService.disLikePost(request);
+    ResponseEntity<ApiResponse<ReactionResponse>> unLikePost(@RequestBody PostReactionRequest request) {
+
         return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<Void>builder()
+                ApiResponse.<ReactionResponse>builder()
                         .code(2001)
+                        .data( postService.disLikePost(request))
                         .message("Dislike Success").build()
         );
     }
 
     @PostMapping("/comments/like")
-    ResponseEntity<ApiResponse<Void>> likeComment(@RequestBody CommentReactionRequest request) {
-        postService.likeComment(request);
+    ResponseEntity<ApiResponse<ReactionResponse>> likeComment(@RequestBody CommentReactionRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<Void>builder()
+                ApiResponse.<ReactionResponse>builder()
                         .code(2001)
+                        .data(postService.likeComment(request))
                         .message("Like Success").build()
         );
     }
 
     @PostMapping("/comments/dislike")
-    ResponseEntity<ApiResponse<Void>> unLikeComment(@RequestBody CommentReactionRequest request) {
-        postService.disLikeComment(request);
+    ResponseEntity<ApiResponse<ReactionResponse>> unLikeComment(@RequestBody CommentReactionRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<Void>builder()
+                ApiResponse.<ReactionResponse>builder()
                         .code(2001)
+                        .data(postService.disLikeComment(request))
                         .message("Dislike Success").build()
         );
     }
