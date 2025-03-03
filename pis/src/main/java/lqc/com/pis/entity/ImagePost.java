@@ -1,14 +1,16 @@
 package lqc.com.pis.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Nationalized;
 
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = "image_post")
+@NoArgsConstructor
+@AllArgsConstructor
 public class ImagePost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

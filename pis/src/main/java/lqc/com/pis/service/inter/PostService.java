@@ -1,11 +1,9 @@
 package lqc.com.pis.service.inter;
 
-import lqc.com.pis.dto.request.post.CommentLevel1Request;
-import lqc.com.pis.dto.request.post.CommentLevel2Request;
-import lqc.com.pis.dto.request.post.CommentReactionRequest;
-import lqc.com.pis.dto.request.post.PostReactionRequest;
+import lqc.com.pis.dto.request.post.*;
 import lqc.com.pis.dto.response.post.*;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface PostService {
@@ -25,4 +23,6 @@ public interface PostService {
     ReactionResponse disLikePost(PostReactionRequest reactionRequest);
     ReactionResponse likeComment(CommentReactionRequest commentReactionRequest);
     ReactionResponse disLikeComment(CommentReactionRequest commentReactionRequest);
+
+    PostCreationResponse addPost(PostCreationRequest postCreationRequest) throws IOException;
 }

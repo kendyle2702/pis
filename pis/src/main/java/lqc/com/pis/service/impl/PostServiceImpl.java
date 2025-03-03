@@ -5,25 +5,22 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import lqc.com.pis.dto.request.post.CommentLevel1Request;
-import lqc.com.pis.dto.request.post.CommentLevel2Request;
-import lqc.com.pis.dto.request.post.CommentReactionRequest;
-import lqc.com.pis.dto.request.post.PostReactionRequest;
+import lqc.com.pis.dto.request.post.*;
 import lqc.com.pis.dto.response.post.*;
-import lqc.com.pis.entity.Comment;
-import lqc.com.pis.entity.Post;
-import lqc.com.pis.entity.Reaction;
-import lqc.com.pis.entity.User;
+import lqc.com.pis.entity.*;
 import lqc.com.pis.exception.AppException;
 import lqc.com.pis.exception.ErrorCode;
+import lqc.com.pis.mapper.PostMapper;
 import lqc.com.pis.repository.*;
+import lqc.com.pis.service.inter.FileService;
 import lqc.com.pis.service.inter.PostService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +35,12 @@ public class PostServiceImpl implements PostService {
     ReactionRepository reactionRepository;
     FriendShipRepository friendShipRepository;
     EntityManager entityManager;
+    FileService fileService;
+
+    PostMapper postMapper;
+
+
+
 
 
     @Override
@@ -57,7 +60,7 @@ public class PostServiceImpl implements PostService {
                                 friendShipRepository.existsFriendship(userId, Long.valueOf(post.getUser().getId()), "FOLLOW") >0
                         ))
                         .caption(post.getContent())
-                        .images(imagePostRepository.findAllByPostId(Long.valueOf(post.getId())).stream().map(image
+                        .images(Optional.ofNullable(imagePostRepository.findAllByPostId(Long.valueOf(post.getId()))).orElse(Collections.emptyList()).stream().map(image
                                 ->new ImagePostReponse(Long.valueOf(image.getId()), image.getUrl())).collect(Collectors.toList()))
                         .likes(Math.toIntExact(reactionRepository.countByPostId(Long.valueOf(post.getId())))) // Nếu null, gán 0
                         .comments(Math.toIntExact(commentRepository.countByPostId(Long.valueOf(post.getId()))))
@@ -276,6 +279,80 @@ public class PostServiceImpl implements PostService {
                 .build();
     }
 
+    @Override
+    public PostCreationResponse addPost(PostCreationRequest postCreationRequest) throws IOException {
+        String mode = postCreationRequest.getMode();
+
+
+        User user = entityManager.getReference(User.class, postCreationRequest.getUserId());
+
+        Post newPost = Post.builder()
+                .user(user)
+                .type(postCreationRequest.getType())
+                .content(postCreationRequest.getContent())
+                .mode(postCreationRequest.getMode())
+                .createAt(Instant.now())
+                .pinned(false)
+                .build();
+
+        Post savedPost = postRepository.save(newPost);
+        PostCreationResponse response = postMapper.toPostCreationResponse(savedPost);
+        response.setUserId(savedPost.getUser().getId());
+        response.setPostId(savedPost.getId());
+
+        List<String> urls = new ArrayList<>();
+
+        if(mode.equals("Public")){
+            // image
+            if(postCreationRequest.getType().equals("Image")){
+                // have image
+                if(postCreationRequest.getFiles() != null && postCreationRequest.getFiles().length>0 && !postCreationRequest.getFiles()[0].isEmpty()){
+                    for (MultipartFile file : postCreationRequest.getFiles()) {
+                        String url = fileService.uploadFile(file);
+                        urls.add(url);
+                        ImagePost imagePost = ImagePost.builder()
+                                .post(savedPost)
+                                .url(url)
+                                .build();
+                        imagePostRepository.save(imagePost);
+
+                    }
+                }
+                // not have image
+                else{
+
+                }
+            }
+            // voice
+            else{
+                for (MultipartFile file : postCreationRequest.getFiles()) {
+                    String url = fileService.uploadFile(file);
+                    urls.add(url);
+                    ImagePost imagePost = ImagePost.builder()
+                            .post(savedPost)
+                            .url(url)
+                            .build();
+                    imagePostRepository.save(imagePost);
+                }
+            }
+        }
+        else{
+            for (MultipartFile file : postCreationRequest.getFiles()) {
+                String url = fileService.uploadFile(file);
+                urls.add(url);
+                ImagePost imagePost = ImagePost.builder()
+                        .post(savedPost)
+                        .url(url)
+                        .build();
+                imagePostRepository.save(imagePost);
+            }
+        }
+        response.setUrls(urls);
+
+
+        return response;
+    }
+
     private String timeAgo(Instant createTime) {
         Instant now = Instant.now();
 
@@ -305,5 +382,8 @@ public class PostServiceImpl implements PostService {
 
         return displayDateTime.format(formatter);
     }
+
+
+
 }
 

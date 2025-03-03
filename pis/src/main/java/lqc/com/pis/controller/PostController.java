@@ -4,17 +4,16 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import lqc.com.pis.dto.request.post.CommentLevel1Request;
-import lqc.com.pis.dto.request.post.CommentLevel2Request;
-import lqc.com.pis.dto.request.post.CommentReactionRequest;
-import lqc.com.pis.dto.request.post.PostReactionRequest;
+import lqc.com.pis.dto.request.post.*;
 import lqc.com.pis.dto.response.ApiResponse;
 import lqc.com.pis.dto.response.post.*;
 import lqc.com.pis.service.inter.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -120,4 +119,31 @@ public class PostController {
                         .message("Dislike Success").build()
         );
     }
+
+
+    @PostMapping()
+    ResponseEntity<ApiResponse<PostCreationResponse>> createPost(
+            @RequestParam("files") MultipartFile[] files,
+            @RequestParam("userId") String userId,
+            @RequestParam("type") String type,
+            @RequestParam("content") String content,
+            @RequestParam("mode") String mode
+    ) throws IOException {
+        PostCreationRequest request = PostCreationRequest.builder()
+                .userId(Integer.parseInt(userId))
+                .type(type)
+                .content(content)
+                .mode(mode)
+                .files(files)
+                .build();
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<PostCreationResponse>builder()
+                        .code(2001)
+                        .data(postService.addPost(request))
+                        .build()
+        );
+    }
+
 }
