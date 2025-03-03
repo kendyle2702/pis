@@ -23,4 +23,11 @@ public interface FriendShipRepository extends JpaRepository<Friendship, Friendsh
 
     @Query(value = "SELECT COUNT(*) FROM friendship WHERE friend_id = :friendId AND friend_type = :friendType", nativeQuery = true)
     Long countByFriendIdAndFriendType(@Param("friendId") Long friendId, @Param("friendType") String friendType);
+
+    @Query(value = "SELECT user_id FROM friendship WHERE friend_id = :friendId AND friend_type = :friendType", nativeQuery = true)
+    List<Integer> findUserIdsByFriendIdAndFriendType(@Param("friendId") Integer friendId, @Param("friendType") String friendType);
+
+    @Query(value = "SELECT friend_id FROM friendship WHERE user_id = :userId AND friend_type = :friendType", nativeQuery = true)
+    List<Integer> findFriendIdsByUserIdAndFriendType(@Param("userId") Integer userId, @Param("friendType") String friendType);
 }
+

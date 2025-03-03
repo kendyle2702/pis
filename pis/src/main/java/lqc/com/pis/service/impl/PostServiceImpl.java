@@ -283,7 +283,6 @@ public class PostServiceImpl implements PostService {
     public PostCreationResponse addPost(PostCreationRequest postCreationRequest) throws IOException {
         String mode = postCreationRequest.getMode();
 
-
         User user = entityManager.getReference(User.class, postCreationRequest.getUserId());
 
         Post newPost = Post.builder()

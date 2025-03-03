@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lqc.com.pis.dto.request.user.UserUpdateRequest;
+import lqc.com.pis.dto.response.post.UserPostResponse;
 import lqc.com.pis.dto.response.profile.FollowResponse;
 import lqc.com.pis.dto.response.user.UserUpdateResponse;
 import lqc.com.pis.entity.User;
@@ -84,9 +85,32 @@ public class UserServiceImpl implements UserService {
         Long followers = friendShipRepository.countByUserIdAndFriendType(userId,"FOLLOW");
         Long following = friendShipRepository.countByFriendIdAndFriendType(userId,"FOLLOW");
 
+        List<Integer> userFollowerIds = friendShipRepository.findFriendIdsByUserIdAndFriendType(Math.toIntExact(userId),"FOLLOW");
+
+        List<Integer> userFollowingIds = friendShipRepository.findUserIdsByFriendIdAndFriendType(Math.toIntExact(userId),"FOLLOW");
+
+        List<User> userFollowers = userRepository.findByIdIn(userFollowerIds);
+        List<User> userFollowings = userRepository.findByIdIn(userFollowingIds);
+
         return FollowResponse.builder()
                 .followers(Math.toIntExact(followers))
+                .userFollowers(userFollowers.stream().map(user -> UserPostResponse.builder()
+                        .userId(user.getId())
+                        .username(user.getUsername())
+                        .avatar(user.getAvatar())
+                        .firstName(user.getFirstName())
+                        .lastName(user.getLastName())
+                        .followers(Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(user.getId()), "FOLLOW")))
+                        .build()).toList())
                 .followingNumbers(Math.toIntExact(following))
+                .userFollowing(userFollowings.stream().map(user -> UserPostResponse.builder()
+                        .userId(user.getId())
+                        .username(user.getUsername())
+                        .avatar(user.getAvatar())
+                        .firstName(user.getFirstName())
+                        .lastName(user.getLastName())
+                        .followers(Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(user.getId()), "FOLLOW")))
+                        .build()).toList())
                 .build();
     }
 }
