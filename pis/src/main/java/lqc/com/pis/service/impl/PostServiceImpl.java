@@ -271,15 +271,13 @@ public class PostServiceImpl implements PostService {
     }
 
     private String timeAgo(Instant createTime) {
-        ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
+        Instant now = Instant.now();
 
-        ZonedDateTime nowZoned = ZonedDateTime.now(zoneId);
-
-        LocalDateTime createDateTime = createTime.atOffset(ZoneOffset.UTC).toLocalDateTime();
-        LocalDateTime nowDateTime = nowZoned.toLocalDateTime();
+        LocalDateTime createDateTime = LocalDateTime.ofInstant(createTime, ZoneOffset.UTC);
+        LocalDateTime nowDateTime = LocalDateTime.ofInstant(now, ZoneOffset.UTC);
 
         Duration duration = Duration.between(createDateTime, nowDateTime);
-
+        //fd
         long seconds = duration.getSeconds();
         if (seconds < 60) return seconds + " seconds";
         long minutes = duration.toMinutes();
@@ -289,6 +287,9 @@ public class PostServiceImpl implements PostService {
         long days = duration.toDays();
         if (days < 7) return days + " days";
 
+        ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
+        LocalDateTime displayDateTime = createDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(zoneId).toLocalDateTime();
+
         DateTimeFormatter formatter;
         if (createDateTime.getYear() == nowDateTime.getYear()) {
             formatter = DateTimeFormatter.ofPattern("dd MMM");
@@ -296,7 +297,7 @@ public class PostServiceImpl implements PostService {
             formatter = DateTimeFormatter.ofPattern("dd MMM, yyyy");
         }
 
-        return createDateTime.format(formatter);
+        return displayDateTime.format(formatter);
     }
 }
 
