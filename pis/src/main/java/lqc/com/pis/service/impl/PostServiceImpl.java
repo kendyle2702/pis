@@ -53,6 +53,7 @@ public class PostServiceImpl implements PostService {
                                 post.getUser().getId(),
                                 post.getUser().getUsername(),
                                 post.getUser().getAvatar(),
+                                Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(post.getUser().getId()), "FOLLOW")),
                                 friendShipRepository.existsFriendship(userId, Long.valueOf(post.getUser().getId()), "FOLLOW") >0
                         ))
                         .caption(post.getContent())
@@ -79,6 +80,7 @@ public class PostServiceImpl implements PostService {
                                 comment.getUser().getId(),
                                 comment.getUser().getUsername(),
                                 comment.getUser().getAvatar(),
+                                Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(comment.getUser().getId()), "FOLLOW")),
                                 friendShipRepository.existsFriendship(commentLevel1Request.getUserId(), Long.valueOf(comment.getUser().getId()), "FOLLOW") >0
                         ))
                         .content(comment.getContent())
@@ -106,6 +108,7 @@ public class PostServiceImpl implements PostService {
                         childComment.getUser().getId(),
                         childComment.getUser().getUsername(),
                         childComment.getUser().getAvatar(),
+                        Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(childComment.getUser().getId()), "FOLLOW")),
                         friendShipRepository.existsFriendship(commentLevel2Request.getUserId(), Long.valueOf(childComment.getUser().getId()), "FOLLOW") >0
                 ))
                 .content(childComment.getContent())
@@ -122,6 +125,7 @@ public class PostServiceImpl implements PostService {
                         comment.getUser().getId(),
                         comment.getUser().getUsername(),
                         comment.getUser().getAvatar(),
+                        Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(comment.getUser().getId()), "FOLLOW")),
                         friendShipRepository.existsFriendship(commentLevel2Request.getUserId(), Long.valueOf(comment.getUser().getId()), "FOLLOW") > 0
                 ))
                 .content(comment.getContent())
@@ -148,6 +152,7 @@ public class PostServiceImpl implements PostService {
                                 post.getUser().getId(),
                                 post.getUser().getUsername(),
                                 post.getUser().getAvatar(),
+                                Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(post.getUser().getId()), "FOLLOW")),
                                 friendShipRepository.existsFriendship(userId, Long.valueOf(post.getUser().getId()), "FOLLOW") >0
                         ))
                         .caption(post.getContent())
@@ -176,6 +181,7 @@ public class PostServiceImpl implements PostService {
                                 post.getUser().getId(),
                                 post.getUser().getUsername(),
                                 post.getUser().getAvatar(),
+                                Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(post.getUser().getId()), "FOLLOW")),
                                 friendShipRepository.existsFriendship(userId, Long.valueOf(post.getUser().getId()), "FOLLOW") >0
                         ))
                         .caption(post.getContent())

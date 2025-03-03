@@ -13,5 +13,6 @@ public class UserPostResponse {
     int userId;
     String username;
     String avatar;
+    int followers;
     boolean isFollow;
 }
