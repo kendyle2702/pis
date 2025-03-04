@@ -29,7 +29,7 @@ public class PostController {
     PostService postService;
     CommentService commentService;
 
-    @GetMapping("/{userId}")
+    @GetMapping("public/{userId}")
     ResponseEntity<ApiResponse<List<PublicPostResponse>>> getPublicPosts(@PathVariable("userId") Long userId) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<List<PublicPostResponse>>builder()

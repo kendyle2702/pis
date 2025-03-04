@@ -42,7 +42,6 @@ public class PostServiceImpl implements PostService {
 
 
 
-
     @Override
     public List<PublicPostResponse> getPublicPostListByUserId(Long userId) {
         List<Post> sortedPosts = postRepository.findByMode("Public").stream()
