@@ -18,7 +18,7 @@ public class UserPostResponse {
     int followers;
     String firstName;
     String lastName;
-    boolean isFollow;
+    Boolean isFollow;
 
     public UserPostResponse(int userId, String username, String avatar, int followers, boolean isFollow) {
         this.userId = userId;

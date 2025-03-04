@@ -101,6 +101,7 @@ public class UserServiceImpl implements UserService {
                         .firstName(user.getFirstName())
                         .lastName(user.getLastName())
                         .followers(Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(user.getId()), "FOLLOW")))
+                        .isFollow(friendShipRepository.existsFriendship( Long.valueOf(user.getId()),userId, "FOLLOW") >0)
                         .build()).toList())
                 .followingNumbers(Math.toIntExact(following))
                 .userFollowing(userFollowings.stream().map(user -> UserPostResponse.builder()
@@ -110,7 +111,23 @@ public class UserServiceImpl implements UserService {
                         .firstName(user.getFirstName())
                         .lastName(user.getLastName())
                         .followers(Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(user.getId()), "FOLLOW")))
+                        .isFollow(friendShipRepository.existsFriendship( Long.valueOf(user.getId()),userId, "FOLLOW") >0)
                         .build()).toList())
                 .build();
+    }
+
+    @Override
+    public List<UserPostResponse> searchUsersInPublic(String request, String userId) {
+        List<User> users = userRepository.searchUsers(request.trim());
+
+        return users.stream().map(user -> UserPostResponse.builder()
+                .userId(user.getId())
+                .username(user.getUsername())
+                .avatar(user.getAvatar())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .followers(Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(user.getId()), "FOLLOW")))
+                .isFollow(friendShipRepository.existsFriendship( Long.valueOf(user.getId()), Long.valueOf(userId), "FOLLOW") >0)
+                .build()).toList();
     }
 }

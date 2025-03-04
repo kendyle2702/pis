@@ -22,4 +22,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     List<User> findByIdIn(Collection<Integer> ids);
+
+    @Query("SELECT u FROM User u WHERE " +
+            "LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(u.firstName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(u.lastName) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<User> searchUsers(@Param("query") String query);
+
 }

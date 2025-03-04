@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lqc.com.pis.dto.request.user.UserUpdateRequest;
 import lqc.com.pis.dto.response.ApiResponse;
+import lqc.com.pis.dto.response.post.UserPostResponse;
 import lqc.com.pis.dto.response.profile.FollowResponse;
 import lqc.com.pis.dto.response.user.UserUpdateResponse;
 import lqc.com.pis.service.inter.FileService;
@@ -67,6 +68,15 @@ public class UserController {
                 ApiResponse.<FollowResponse>builder()
                         .code(2000)
                         .data(userService.getFollow(userId)).build()
+        );
+    }
+
+    @GetMapping("/search")
+    ResponseEntity<ApiResponse<List<UserPostResponse>>> searchUsersInPublic(@RequestParam("text") String request, @RequestParam("userId") String userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<List<UserPostResponse>>builder()
+                        .code(2000)
+                        .data(userService.searchUsersInPublic(request,userId)).build()
         );
     }
 

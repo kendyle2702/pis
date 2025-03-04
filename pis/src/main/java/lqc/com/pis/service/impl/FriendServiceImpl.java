@@ -422,4 +422,7 @@ public class FriendServiceImpl implements FriendService {
         friendShipRepository.delete(friendship1);
         friendShipRepository.delete(friendship2);
     }
+
+
+
 }
