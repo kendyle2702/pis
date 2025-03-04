@@ -19,6 +19,15 @@ public enum ErrorCode {
     COMMENT_NOT_EXISTED(4009, "Comment not existed", HttpStatus.NOT_FOUND),
     NOT_HAVE_CONVERSATION(4010, "Not have conversation", HttpStatus.BAD_REQUEST),
     NOT_HAVE_REACTION(4011, "Not have reaction", HttpStatus.BAD_REQUEST),
+
+    HAVE_FOLLOWING(4012, "You have followed this user!", HttpStatus.BAD_REQUEST),
+    HAVE_NOT_FOLLOWING(4013,"You have not followed this user!",HttpStatus.BAD_REQUEST),
+    HAVE_FRIEND(4014, "You are already friends with this user!", HttpStatus.BAD_REQUEST),
+    HAVE_REQUEST_FRIEND(4015, "You have sent a friend request to this person!", HttpStatus.BAD_REQUEST),
+    HAVE_NOT_REQUEST_FRIEND(4016, "You have not sent a friend request to this person yet!", HttpStatus.BAD_REQUEST),
+    HAVE_NOT_FRIEND(4017, "You are not friends with this user yet!", HttpStatus.BAD_REQUEST),
+    HAVE_BLOCK(4018,"You and this person have blocked each other!",HttpStatus.BAD_REQUEST),
+    HAVE_NOT_BLOCK(4019,"You and this person have not blocked each other!",HttpStatus.BAD_REQUEST)
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

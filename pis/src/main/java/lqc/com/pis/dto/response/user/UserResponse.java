@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
     Integer id;
     String username;
@@ -23,4 +24,9 @@ public class UserResponse {
     String qrCode;
     LocalDate birthday;
     Boolean isActive;
+
+    Boolean isFollowing;
+    Boolean isFriend;
+    Boolean isSendRequest;
+    Boolean isBlock;
 }

@@ -57,7 +57,7 @@ public class PostServiceImpl implements PostService {
                                 post.getUser().getUsername(),
                                 post.getUser().getAvatar(),
                                 Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(post.getUser().getId()), "FOLLOW")),
-                                friendShipRepository.existsFriendship(userId, Long.valueOf(post.getUser().getId()), "FOLLOW") >0
+                                friendShipRepository.existsFriendship(Long.valueOf(post.getUser().getId()),userId, "FOLLOW") >0
                         ))
                         .caption(post.getContent())
                         .images(Optional.ofNullable(imagePostRepository.findAllByPostId(Long.valueOf(post.getId()))).orElse(Collections.emptyList()).stream().map(image
@@ -84,7 +84,7 @@ public class PostServiceImpl implements PostService {
                                 comment.getUser().getUsername(),
                                 comment.getUser().getAvatar(),
                                 Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(comment.getUser().getId()), "FOLLOW")),
-                                friendShipRepository.existsFriendship(commentLevel1Request.getUserId(), Long.valueOf(comment.getUser().getId()), "FOLLOW") >0
+                                friendShipRepository.existsFriendship(Long.valueOf(comment.getUser().getId()),commentLevel1Request.getUserId(),  "FOLLOW") >0
                         ))
                         .content(comment.getContent())
                         .url(comment.getUrl())
@@ -112,7 +112,7 @@ public class PostServiceImpl implements PostService {
                         childComment.getUser().getUsername(),
                         childComment.getUser().getAvatar(),
                         Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(childComment.getUser().getId()), "FOLLOW")),
-                        friendShipRepository.existsFriendship(commentLevel2Request.getUserId(), Long.valueOf(childComment.getUser().getId()), "FOLLOW") >0
+                        friendShipRepository.existsFriendship( Long.valueOf(childComment.getUser().getId()), commentLevel2Request.getUserId(),"FOLLOW") >0
                 ))
                 .content(childComment.getContent())
                 .url(childComment.getUrl())
@@ -129,7 +129,7 @@ public class PostServiceImpl implements PostService {
                         comment.getUser().getUsername(),
                         comment.getUser().getAvatar(),
                         Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(comment.getUser().getId()), "FOLLOW")),
-                        friendShipRepository.existsFriendship(commentLevel2Request.getUserId(), Long.valueOf(comment.getUser().getId()), "FOLLOW") > 0
+                        friendShipRepository.existsFriendship( Long.valueOf(comment.getUser().getId()), commentLevel2Request.getUserId(),"FOLLOW") > 0
                 ))
                 .content(comment.getContent())
                 .url(comment.getUrl())
@@ -156,7 +156,7 @@ public class PostServiceImpl implements PostService {
                                 post.getUser().getUsername(),
                                 post.getUser().getAvatar(),
                                 Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(post.getUser().getId()), "FOLLOW")),
-                                friendShipRepository.existsFriendship(userId, Long.valueOf(post.getUser().getId()), "FOLLOW") >0
+                                friendShipRepository.existsFriendship(Long.valueOf(post.getUser().getId()),userId,  "FOLLOW") >0
                         ))
                         .caption(post.getContent())
                         .images(imagePostRepository.findAllByPostId(Long.valueOf(post.getId())).stream().map(image
@@ -185,7 +185,7 @@ public class PostServiceImpl implements PostService {
                                 post.getUser().getUsername(),
                                 post.getUser().getAvatar(),
                                 Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(post.getUser().getId()), "FOLLOW")),
-                                friendShipRepository.existsFriendship(userId, Long.valueOf(post.getUser().getId()), "FOLLOW") >0
+                                friendShipRepository.existsFriendship( Long.valueOf(post.getUser().getId()),userId, "FOLLOW") >0
                         ))
                         .caption(post.getContent())
                         .images(imagePostRepository.findAllByPostId(Long.valueOf(post.getId())).stream().map(image

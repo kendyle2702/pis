@@ -18,5 +18,4 @@ public class FollowResponse {
     List<UserPostResponse> userFollowers;
     int followingNumbers;
     List<UserPostResponse> userFollowing;
-
 }

@@ -4,9 +4,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import lqc.com.pis.dto.request.comment.CommentCreationRequest;
 import lqc.com.pis.dto.request.post.*;
 import lqc.com.pis.dto.response.ApiResponse;
+import lqc.com.pis.dto.response.comment.CommentCreationResponse;
 import lqc.com.pis.dto.response.post.*;
+import lqc.com.pis.service.inter.CommentService;
 import lqc.com.pis.service.inter.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +27,7 @@ import java.util.List;
 public class PostController {
 
     PostService postService;
+    CommentService commentService;
 
     @GetMapping("/{userId}")
     ResponseEntity<ApiResponse<List<PublicPostResponse>>> getPublicPosts(@PathVariable("userId") Long userId) {
@@ -146,4 +150,49 @@ public class PostController {
         );
     }
 
+
+    // comment => formdata
+    @PostMapping("/comments")
+    ResponseEntity<ApiResponse<CommentCreationResponse>> createComment(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("postId") String postId,
+            @RequestParam("parentCommentId") String parentCommentId,
+            @RequestParam("userId") String userId,
+            @RequestParam("content") String content,
+            @RequestParam("type") String type
+    ) throws IOException {
+        int parentCommentIdInt;
+        if(parentCommentId == null || parentCommentId.equals("")){
+            parentCommentIdInt = -1;
+        }
+        else{
+            parentCommentIdInt = Integer.parseInt(parentCommentId);
+        }
+
+        if(file == null || file.isEmpty()){
+            file = null;
+        }
+
+        log.info(String.valueOf(file));
+        log.info(postId);
+        log.info(String.valueOf(parentCommentIdInt));
+        log.info(userId);
+        log.info(content);
+        log.info(type);
+        CommentCreationRequest request = CommentCreationRequest.builder()
+                .postId(Integer.parseInt(postId))
+                .parentCommentId(parentCommentIdInt)
+                .userId(Integer.parseInt(userId))
+                .content(content)
+                .file(file)
+                .type(type)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<CommentCreationResponse>builder()
+                        .code(2001)
+                        .data(commentService.createComment(request))
+                        .build()
+        );
+    }
 }

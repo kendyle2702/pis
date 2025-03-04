@@ -27,5 +27,4 @@ public class UserPostResponse {
         this.followers = followers;
         this.isFollow = isFollow;
     }
-
 }
