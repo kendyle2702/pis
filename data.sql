@@ -1,4 +1,4 @@
-INSERT INTO user (username, first_name, last_name, phone_number, email, avatar, qr_code, birthday, hash_password, is_active, is_login, login_attempts, otp) VALUES
+INSERT INTO [user] (username, first_name, last_name, phone_number, email, avatar, qr_code, birthday, hash_password, is_active, is_login, login_attempts, otp) VALUES
 (N'lequoccu2003', N'Cư', N'Lê Quốc', null, N'lequoccu2003@gmail.com', N'https://pisnewcontainer.blob.core.windows.net/image/0c157c72-30bc-40f9-83a9-97ea3c536984-2b723c838ccf32916bde.jpg', null, null, N'$2a$10$QCgk0Md2fpjOnCqTskcvIONmtaOFT5yxJOxlDUqBUiXTq7TNfiQoO', 1, null, 0, null),
 (N'trungtien1910', N'Tiến', N'Bạch Trung', null, N'trungtien1910@gmail.com', N'https://pisnewcontainer.blob.core.windows.net/image/5779e01c-dd11-42da-b100-7ee000d81858-2de1f0504c1cf242ab0d.jpg', null, null, N'$2a$10$ElrI9IgPCcUS0KM0YIzOdeM7hAldJztZRmoj2gnorzNgE6nsBy3z6', 1, null, 0, null),
 (N'tuyetngan02112003', N'Ngân', N'Tuyết', null, N'tuyetngan02112003@gmail.com', N'https://pisnewcontainer.blob.core.windows.net/image/58a6bacf-9f33-4023-a9c1-2785d498724b-3eb0fb1e4f52f10ca843.jpg', null, null, N'$2a$10$GcuWg9q5A4NIr3RrExGJReuqcnGjMIO9Y.EGtgSyVDQU4gJu6v.3K', 1, null, 0, null),
@@ -45,9 +45,9 @@ INSERT INTO post (user_id, type, content, mode, create_at, pinned) VALUES
 (1, N'Image', 'Hôm nay là một ngày tuyệt vời!', N'Public', '2025-01-28 02:02:37', 0),
 (2, N'Image', N'Chia sẻ một bức ảnh đẹp từ chuyến du lịch.', N'Public', '2025-02-06 01:00:21', 0),
 (3, N'Voice', N'Cùng nghe voice này nhé!', N'Public', '2025-02-06 18:39:23', 0),
-(4, N'Image', N'Một ngày đầy cảm hứng với công việc.', N'Public', '2025-01-22 04:25:23', 0)
+(4, N'Image', N'Một ngày đầy cảm hứng với công việc.', N'Public', '2025-01-22 04:25:23', 0),
 (5, N'Image', N'Chú cún này quá dễ thương', N'Public', '2025-02-12 23:25:23', 0),
-(6, N'Image', N'Bữa ăn thật là ngon', N'Public', '2025-02-12 22:25:23', 0)
+(6, N'Image', N'Bữa ăn thật là ngon', N'Public', '2025-02-12 22:25:23', 0),
 (7, N'Image', N'Nay ra đường toàn gặp chuyện xui hà', N'Public', '2025-02-09 10:25:23', 0);
 
 INSERT INTO image_post (post_id, url) VALUES
@@ -91,7 +91,7 @@ INSERT INTO comment (post_id, parent_comment_id, user_id, type, url, content, cr
 
 
 
-INSERT INTO reaction (user_id, post_id, comment_id, create_at) VALUES
+INSERT INTO reaction (user_id, post_id, comment_id, created_at) VALUES
 (1, 1, null, null),
 (2, 1, null, null),
 (3, 1, null, null),
@@ -122,11 +122,11 @@ INSERT INTO message (conversation_id, sender_id, type, url, content, created_at,
 (1,1,N'Text',null,N'Sáng nay tôi nhớ bảo xong trước 10h mà?','2025-02-12 10:05:23','SEEN'),
 (1,2,N'Text',null,N'Dạ... 10h nào ạ? Hôm nay hay tháng sau?','2025-02-12 10:07:23','SEEN'),
 (1,1,N'Text',null,N'Nhanh lên nha!!!','2025-02-12 10:08:23','SEEN'),
-(1,2,N'Text',null,N'Dạaaaaa','2025-02-12 10:9:23','NOT SEEN')
+(1,2,N'Text',null,N'Dạaaaaa','2025-02-12 10:9:23','NOT SEEN'),
 
 (2,1,N'Image',N'https://pisnewcontainer.blob.core.windows.net/image/hinh-nen-bau-troi-thump.jpg',N'','2025-02-11 9:00:23','SEEN'),
 (2,1,N'Text',null,N'Em thấy ảnh này đẹp hông?','2025-02-11 9:01:23','SEEN'),
-(2,3,N'Text',null,N'Quá đẹp luôn!','2025-02-11 9:02:23','SEEN')
+(2,3,N'Text',null,N'Quá đẹp luôn!','2025-02-11 9:02:23','SEEN'),
 
 (3,1,N'Voice',N'https://pisnewcontainer.blob.core.windows.net/image/Voice 026.m4a',N'','2025-02-5 7:15:23','SEEN'),
 (3,5,N'Text',null,N'Đồ bê đê!!!','2025-02-5 7:20:23','SEEN'),
