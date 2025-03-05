@@ -180,6 +180,11 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
+    @Override
+    public void markAsSeen(Long conversationId, Long senderId) {
+        messageRepository.markMessagesAsRead(conversationId, senderId);
+    }
+
 
     private String getLastMsg(Conversation conversation, Long userId) {
         List<Message> messages = messageRepository.findByConversationId(conversation.getId());

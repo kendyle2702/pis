@@ -152,4 +152,15 @@ public class ChatController {
 
         return output;
     }
+
+    @PostMapping("/{conversationId}/{senderId}/seen")
+    ResponseEntity<ApiResponse<Void>> markAsSeen(@PathVariable("conversationId") Long conversationId, @PathVariable("senderId") Long senderId) {
+        chatService.markAsSeen(conversationId,senderId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<Void>builder()
+                        .code(2000)
+                        .message("Seen all messages!")
+                        .build()
+        );
+    }
 }
