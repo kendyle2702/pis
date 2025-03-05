@@ -92,19 +92,19 @@ INSERT INTO comment (post_id, parent_comment_id, user_id, type, url, content, cr
 
 
 INSERT INTO reaction (user_id, post_id, comment_id, created_at) VALUES
-(1, 1, null, null),
-(2, 1, null, null),
-(3, 1, null, null),
-(1, null, 2, null),
+(1, 1, null, '2025-01-28 02:03:37'),
+(2, 1, null, '2025-01-28 02:05:37'),
+(3, 1, null, '2025-01-28 03:02:37'),
+(1, null, 2, '2025-01-29 03:05:37'),
 
-(7, 2, null, null),
-(2, 2, null, null),
-
-
-(8, 3, null, null),	
+(7, 2, null, '2025-02-06 01:05:21'),
+(2, 2, null, '2025-02-06 01:15:21'),
 
 
-(10, 4, null, null);
+(8, 3, null, '2025-02-06 18:45:23'),	
+
+
+(10, 4, null, '2025-01-22 04:30:23');
 
 
 
