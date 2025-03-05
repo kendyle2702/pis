@@ -42,8 +42,6 @@ public class ChatController {
 
 
 
-
-
     @GetMapping("/{userId}")
     ResponseEntity<ApiResponse<List<ConversationResponse>>> getConversations(@PathVariable("userId") Long userId) {
         return ResponseEntity.status(HttpStatus.OK).body(

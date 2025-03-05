@@ -38,6 +38,15 @@ public class PostController {
         );
     }
 
+    @GetMapping("private/{userId}")
+    ResponseEntity<ApiResponse<List<PublicPostResponse>>> getPrivatePosts(@PathVariable("userId") Long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<List<PublicPostResponse>>builder()
+                        .code(2001)
+                        .data(postService.getPrivatePostListByUserId(userId)).build()
+        );
+    }
+
     @PostMapping("/comments/level1")
     ResponseEntity<ApiResponse<List<CommentLevel1Response>>> GetCommentsLevel1(@RequestBody CommentLevel1Request request) {
         return ResponseEntity.status(HttpStatus.OK).body(

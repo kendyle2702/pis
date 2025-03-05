@@ -12,5 +12,8 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByUserIdAndMode(Integer userId, String mode);
     List<Post> findByMode(String mode);
+
+    @Query("SELECT p FROM Post p WHERE p.user.id IN :userIds ORDER BY p.createAt DESC")
+    List<Post> findByUserIds(@Param("userIds") List<Integer> userIds);
 }
 

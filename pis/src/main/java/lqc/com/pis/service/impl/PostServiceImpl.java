@@ -71,6 +71,31 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<PublicPostResponse> getPrivatePostListByUserId(Long userId) {
+        List<Integer> userFollowerIds = friendShipRepository.findFriendIdsByUserIdAndFriendType(Math.toIntExact(userId),"FRIEND");
+        List<Post> posts = postRepository.findByUserIds(userFollowerIds);
+
+        return posts.stream().map(post -> PublicPostResponse.builder()
+                .id(Long.valueOf(post.getId()))
+                .userPostResponse(new UserPostResponse(
+                        post.getUser().getId(),
+                        post.getUser().getUsername(),
+                        post.getUser().getAvatar(),
+                        Math.toIntExact(friendShipRepository.countByUserIdAndFriendType(Long.valueOf(post.getUser().getId()), "FOLLOW")),
+                        friendShipRepository.existsFriendship(Long.valueOf(post.getUser().getId()),userId, "FOLLOW") >0
+                ))
+                .caption(post.getContent())
+                .images(Optional.ofNullable(imagePostRepository.findAllByPostId(Long.valueOf(post.getId()))).orElse(Collections.emptyList()).stream().map(image
+                        ->new ImagePostReponse(Long.valueOf(image.getId()), image.getUrl())).collect(Collectors.toList()))
+                .likes(Math.toIntExact(reactionRepository.countByPostId(Long.valueOf(post.getId())))) // Nếu null, gán 0
+                .comments(Math.toIntExact(commentRepository.countByPostId(Long.valueOf(post.getId()))))
+                .createTime(timeAgo(post.getCreateAt()))
+                .type(post.getType())
+                .isLike(reactionRepository.existsByPostIdAndUserId(Long.valueOf(post.getId()), userId))
+                .build()).toList();
+    }
+
+    @Override
     public List<CommentLevel1Response> getCommentLevel1(CommentLevel1Request commentLevel1Request) {
         List<Comment> comments = commentRepository.findByPostIdAndParentCommentId(commentLevel1Request.getPostId(),null);
         comments.sort(Comparator.comparing(Comment::getCreateAt).reversed());

@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface PostService {
     List<PublicPostResponse> getPublicPostListByUserId(Long userId);
+    List<PublicPostResponse> getPrivatePostListByUserId(Long userId);
 
     List<CommentLevel1Response> getCommentLevel1(CommentLevel1Request commentLevel1Request);
 
