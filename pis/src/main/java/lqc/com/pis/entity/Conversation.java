@@ -1,15 +1,17 @@
 package lqc.com.pis.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = "conversation")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Conversation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

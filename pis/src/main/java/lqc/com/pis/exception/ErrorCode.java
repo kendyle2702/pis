@@ -27,7 +27,9 @@ public enum ErrorCode {
     HAVE_NOT_REQUEST_FRIEND(4016, "You have not sent a friend request to this person yet!", HttpStatus.BAD_REQUEST),
     HAVE_NOT_FRIEND(4017, "You are not friends with this user yet!", HttpStatus.BAD_REQUEST),
     HAVE_BLOCK(4018,"You and this person have blocked each other!",HttpStatus.BAD_REQUEST),
-    HAVE_NOT_BLOCK(4019,"You and this person have not blocked each other!",HttpStatus.BAD_REQUEST)
+    HAVE_NOT_BLOCK(4019,"You and this person have not blocked each other!",HttpStatus.BAD_REQUEST),
+    HAVE_CONVERSATION(4020,"You and this person have conversation each other!",HttpStatus.BAD_REQUEST),
+    HAVE_NOT_CONVERSATION(4020,"You and this person have not conversation each other!",HttpStatus.BAD_REQUEST)
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

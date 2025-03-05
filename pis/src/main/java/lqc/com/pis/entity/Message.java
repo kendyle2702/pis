@@ -1,8 +1,7 @@
 package lqc.com.pis.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 
@@ -11,7 +10,10 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = "message")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

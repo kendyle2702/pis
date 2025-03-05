@@ -1,25 +1,38 @@
 package lqc.com.pis.service.impl;
 
+import jakarta.persistence.EntityManager;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import lqc.com.pis.dto.request.chat.MessageCreationRequest;
+import lqc.com.pis.dto.response.chat.ConversationCreationResponse;
 import lqc.com.pis.dto.response.chat.ConversationResponse;
 import lqc.com.pis.dto.response.chat.MessageResponse;
 import lqc.com.pis.entity.Conversation;
 import lqc.com.pis.entity.Message;
 import lqc.com.pis.entity.Post;
+import lqc.com.pis.entity.User;
 import lqc.com.pis.exception.AppException;
 import lqc.com.pis.exception.ErrorCode;
 import lqc.com.pis.repository.ConversationRepository;
 import lqc.com.pis.repository.MessageRepository;
 import lqc.com.pis.service.inter.ChatService;
+import lqc.com.pis.service.inter.FileService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+
+import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +41,8 @@ import java.util.List;
 public class ChatServiceImpl implements ChatService {
     ConversationRepository conversationRepository;
     MessageRepository messageRepository;
+    EntityManager entityManager;
+    FileService fileService;
 
     @Override
     public List<ConversationResponse> getConversationList(Long userId) {
@@ -92,6 +107,80 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public MessageResponse sendMessage(MessageCreationRequest messageCreationRequest) throws IOException {
+
+        Conversation conversation = entityManager.getReference(Conversation.class, messageCreationRequest.getConversationId());
+        User sender = entityManager.getReference(User.class, messageCreationRequest.getSenderId());
+
+        String file = null;
+        if(messageCreationRequest.getFile() != null){
+            file = fileService.uploadFile(messageCreationRequest.getFile());
+        }
+
+        Message message = Message.builder()
+                .conversation(conversation)
+                .sender(sender)
+                .type(messageCreationRequest.getType())
+                .url(file)
+                .content(messageCreationRequest.getContent())
+                .createdAt(Instant.now())
+                .status("NOT SEEN")
+                .build();
+
+        Message newMessage = messageRepository.save(message);
+
+        return MessageResponse.builder()
+                .userId(newMessage.getSender().getId())
+                .avatar(newMessage.getSender().getAvatar())
+                .type(newMessage.getType())
+                .content(newMessage.getContent())
+                .createTime(timeAgo(message.getCreatedAt()))
+                .status(newMessage.getStatus())
+                .build();
+    }
+
+    @Override
+    public ConversationCreationResponse createConversation(Long userId, Long receiveId) {
+
+        Conversation conversation1 = conversationRepository.findByUser1IdAndUser2Id(Math.toIntExact(userId), Math.toIntExact(receiveId));
+        Conversation conversation2 = conversationRepository.findByUser1IdAndUser2Id(Math.toIntExact(receiveId), Math.toIntExact(userId));
+
+        Conversation newConversation;
+        if(conversation1 == null && conversation2 == null){
+            User user1 = entityManager.getReference(User.class, userId);
+            User user2 = entityManager.getReference(User.class, receiveId);
+            Conversation conversation = Conversation.builder()
+                    .user1(user1)
+                    .user2(user2)
+                    .lastTime(Instant.now())
+                    .build();
+
+            newConversation = conversationRepository.save(conversation);
+        }
+        else{
+            throw new AppException(ErrorCode.HAVE_CONVERSATION);
+        }
+
+        return ConversationCreationResponse.builder().conversationId(newConversation.getId()).build();
+    }
+
+    @Override
+    public ConversationCreationResponse getConversationId(Long userId, Long receiveId) {
+        Conversation conversation1 = conversationRepository.findByUser1IdAndUser2Id(Math.toIntExact(userId), Math.toIntExact(receiveId));
+        Conversation conversation2 = conversationRepository.findByUser1IdAndUser2Id(Math.toIntExact(receiveId), Math.toIntExact(userId));
+
+        if(conversation1 == null && conversation2 == null){
+            throw new AppException(ErrorCode.HAVE_NOT_CONVERSATION);
+        }
+        else{
+            if(conversation1  == null) return ConversationCreationResponse.builder().conversationId(conversation2.getId()).build();
+            else return ConversationCreationResponse.builder().conversationId(conversation1.getId()).build();
+        }
+    }
+
+
     private String getLastMsg(Conversation conversation, Long userId) {
         List<Message> messages = messageRepository.findByConversationId(conversation.getId());
         List<Message> sortedMessages = messages.stream()
@@ -150,16 +239,15 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
-    private String timeAgo(Instant createTime) {
-        ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
+    @Override
+    public String timeAgo(Instant createTime) {
+        Instant now = Instant.now();
 
-        ZonedDateTime nowZoned = ZonedDateTime.now(zoneId);
-
-        LocalDateTime createDateTime = createTime.atOffset(ZoneOffset.UTC).toLocalDateTime();
-        LocalDateTime nowDateTime = nowZoned.toLocalDateTime();
+        LocalDateTime createDateTime = LocalDateTime.ofInstant(createTime, ZoneOffset.UTC);
+        LocalDateTime nowDateTime = LocalDateTime.ofInstant(now, ZoneOffset.UTC);
 
         Duration duration = Duration.between(createDateTime, nowDateTime);
-
+        //fd
         long seconds = duration.getSeconds();
         if (seconds < 60) return seconds + " seconds";
         long minutes = duration.toMinutes();
@@ -169,6 +257,9 @@ public class ChatServiceImpl implements ChatService {
         long days = duration.toDays();
         if (days < 7) return days + " days";
 
+        ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
+        LocalDateTime displayDateTime = createDateTime.atZone(ZoneOffset.UTC).withZoneSameInstant(zoneId).toLocalDateTime();
+
         DateTimeFormatter formatter;
         if (createDateTime.getYear() == nowDateTime.getYear()) {
             formatter = DateTimeFormatter.ofPattern("dd MMM");
@@ -176,6 +267,7 @@ public class ChatServiceImpl implements ChatService {
             formatter = DateTimeFormatter.ofPattern("dd MMM, yyyy");
         }
 
-        return createDateTime.format(formatter);
+        return displayDateTime.format(formatter);
     }
 }
+
