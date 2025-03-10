@@ -30,13 +30,13 @@ PIS is a social networking project that divides both private and public function
 Clone with HTTPS
 ```bash
   git clone https://github.com/kendyle2702/pis.git
-  cd pis-backend
+  cd pis
 ```
 
 Clone with SSH
 ```bash
   git clone git@github.com:kendyle2702/pis.git
-  cd pis-backend
+  cd pis
 ```
 
 ### **3️⃣ Run Docker Compose**
