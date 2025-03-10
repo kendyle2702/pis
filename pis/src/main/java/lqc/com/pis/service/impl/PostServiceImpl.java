@@ -73,7 +73,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PublicPostResponse> getPrivatePostListByUserId(Long userId) {
         List<Integer> userFollowerIds = friendShipRepository.findFriendIdsByUserIdAndFriendType(Math.toIntExact(userId),"FRIEND");
-        List<Post> posts = postRepository.findByUserIds(userFollowerIds);
+        List<Post> posts = postRepository.findByUserIds(userFollowerIds, userId);
 
         return posts.stream().map(post -> PublicPostResponse.builder()
                 .id(Long.valueOf(post.getId()))

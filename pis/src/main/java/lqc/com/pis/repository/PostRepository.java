@@ -13,7 +13,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByUserIdAndMode(Integer userId, String mode);
     List<Post> findByMode(String mode);
 
-    @Query("SELECT p FROM Post p WHERE p.user.id IN :userIds AND p.mode = 'Private' ORDER BY p.createAt DESC")
-    List<Post> findByUserIds(@Param("userIds") List<Integer> userIds);
+    @Query("SELECT p FROM Post p WHERE (p.user.id IN :userIds AND p.mode = 'Private') OR p.user.id = :userId ORDER BY p.createAt DESC")
+    List<Post> findByUserIds(@Param("userIds") List<Integer> userIds,@Param("userId") Long userId);
 }
 
