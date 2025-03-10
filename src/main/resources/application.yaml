@@ -1,0 +1,49 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 15MB
+  datasource:
+    url:  ${SPRING_DATASOURCE_URL:jdbc:sqlserver://localhost:1433;databaseName=pis;encrypt=true;trustServerCertificate=true}
+    username: ${SPRING_DATASOURCE_USERNAME:SA}
+    password: ${SPRING_DATASOURCE_PASSWORD:Password789}
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServerDialect
+    hibernate:
+      ddl-auto: none  # create, update, validate, none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: kendyle2702@gmail.com
+    password: ogvf fphi uyzc wbyy
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+azure:
+  storage:
+    connection-string: "DefaultEndpointsProtocol=https;AccountName=pisnewcontainer;AccountKey=gBlvX0fMIRhySg3Xy1u8vT3BCVV7lD/HRcuxhnWM3dyuYEAlilU1Dr8mZAgV7dW7EluN2Bz4mW+G+AStld/IXA==;EndpointSuffix=core.windows.net"
+    container-name: "image"
+
+
+
+jwt:
+  signerKey: "YqvUBDFkYwvZFFKHHRoePHueiKAmrVdubXLJQbP04rfshwdSjnI7KDUq/IIQCCVO"
+
+
+
+#ogvf fphi uyzc wbyy
