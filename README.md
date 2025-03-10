@@ -25,7 +25,22 @@ PIS is a social networking project that divides both private and public function
 ### **1️⃣ Install Docker (Latest Version)**
 📌 Visit the official [Docker website](https://docs.docker.com/engine/install/)
 
-### **2️⃣ Run Docker Compose**
+### **2️⃣ Clone the Project**
+
+Clone with HTTPS
+```bash
+  git clone https://github.com/kendyle2702/pis.git
+  cd pis-backend
+```
+
+Clone with SSH
+```bash
+  git clone git@github.com:kendyle2702/pis.git
+  cd pis-backend
+```
+
+### **3️⃣ Run Docker Compose**
+
 To start this project run
 ```bash
   docker compose up
