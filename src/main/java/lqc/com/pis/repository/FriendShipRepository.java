@@ -11,18 +11,18 @@ import java.util.List;
 
 @Repository
 public interface FriendShipRepository extends JpaRepository<Friendship, FriendshipId> {
-    @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM friendship f WHERE f.user_id = :userId AND f.friend_id = :friendId AND f.friend_type = :friendType AND f.is_block = 0", nativeQuery = true)
+    @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM friendship f WHERE f.user_id = :userId AND f.friend_id = :friendId AND f.friend_type = :friendType AND f.is_block = FALSE", nativeQuery = true)
     int existsFriendship(@Param("userId") Long userId, @Param("friendId") Long friendId, @Param("friendType") String friendType);
 
 
-    @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM friendship f WHERE f.user_id = :userId AND f.friend_id = :friendId AND f.friend_type = :friendType AND f.is_friend = 1 AND f.is_block = 0", nativeQuery = true)
+    @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM friendship f WHERE f.user_id = :userId AND f.friend_id = :friendId AND f.friend_type = :friendType AND f.is_friend = TRUE AND f.is_block = FALSE", nativeQuery = true)
     int isFriend(@Param("userId") Long userId, @Param("friendId") Long friendId, @Param("friendType") String friendType);
 
 
-    @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM friendship f WHERE f.user_id = :userId AND f.friend_id = :friendId AND f.friend_type = :friendType AND f.is_friend = 0 AND f.is_block = 0", nativeQuery = true)
+    @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM friendship f WHERE f.user_id = :userId AND f.friend_id = :friendId AND f.friend_type = :friendType AND f.is_friend = FALSE AND f.is_block = FALSE", nativeQuery = true)
     int isSendRequestFriend(@Param("userId") Long userId, @Param("friendId") Long friendId, @Param("friendType") String friendType);
 
-    @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM friendship f WHERE f.user_id = :userId AND f.friend_id = :friendId AND f.friend_type = :friendType AND f.is_block=1", nativeQuery = true)
+    @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM friendship f WHERE f.user_id = :userId AND f.friend_id = :friendId AND f.friend_type = :friendType AND f.is_block=TRUE", nativeQuery = true)
     int isBlockFriend(@Param("userId") Long userId, @Param("friendId") Long friendId, @Param("friendType") String friendType);
 
 

@@ -7,7 +7,6 @@ import lqc.com.pis.dto.request.user.UserUpdateRequest;
 import lqc.com.pis.dto.response.post.UserPostResponse;
 import lqc.com.pis.dto.response.profile.FollowResponse;
 import lqc.com.pis.dto.response.user.UserUpdateResponse;
-import lqc.com.pis.entity.User;
 import lqc.com.pis.exception.AppException;
 import lqc.com.pis.exception.ErrorCode;
 import lqc.com.pis.mapper.UserMapper;
@@ -20,7 +19,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-
+import lqc.com.pis.entity.User;
+import lqc.com.pis.entity.Conversation;
+import lqc.com.pis.entity.Friendship;
+import lqc.com.pis.entity.FriendshipId;
+import lqc.com.pis.entity.ImageComment;
+import lqc.com.pis.entity.ImagePost;
+import lqc.com.pis.entity.InvalidAccessToken;
+import lqc.com.pis.entity.Message;
+import lqc.com.pis.entity.Post;
+import lqc.com.pis.entity.Reaction;
+import lqc.com.pis.entity.Comment;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

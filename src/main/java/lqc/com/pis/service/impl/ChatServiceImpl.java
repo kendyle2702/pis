@@ -1,5 +1,15 @@
 package lqc.com.pis.service.impl;
-
+import lqc.com.pis.entity.User;
+import lqc.com.pis.entity.Conversation;
+import lqc.com.pis.entity.Friendship;
+import lqc.com.pis.entity.FriendshipId;
+import lqc.com.pis.entity.ImageComment;
+import lqc.com.pis.entity.ImagePost;
+import lqc.com.pis.entity.InvalidAccessToken;
+import lqc.com.pis.entity.Message;
+import lqc.com.pis.entity.Post;
+import lqc.com.pis.entity.Reaction;
+import lqc.com.pis.entity.Comment;
 import jakarta.persistence.EntityManager;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -9,10 +19,6 @@ import lqc.com.pis.dto.request.chat.MessageCreationRequest;
 import lqc.com.pis.dto.response.chat.ConversationCreationResponse;
 import lqc.com.pis.dto.response.chat.ConversationResponse;
 import lqc.com.pis.dto.response.chat.MessageResponse;
-import lqc.com.pis.entity.Conversation;
-import lqc.com.pis.entity.Message;
-import lqc.com.pis.entity.Post;
-import lqc.com.pis.entity.User;
 import lqc.com.pis.exception.AppException;
 import lqc.com.pis.exception.ErrorCode;
 import lqc.com.pis.repository.ConversationRepository;
@@ -20,8 +26,6 @@ import lqc.com.pis.repository.MessageRepository;
 import lqc.com.pis.service.inter.ChatService;
 import lqc.com.pis.service.inter.FileService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +35,6 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor

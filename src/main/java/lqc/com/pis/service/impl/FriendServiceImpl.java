@@ -7,11 +7,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lqc.com.pis.dto.request.friend.FriendActionRequest;
 import lqc.com.pis.dto.request.friend.FriendProfileRequest;
-import lqc.com.pis.dto.response.post.PostResponse;
 import lqc.com.pis.dto.response.user.UserResponse;
-import lqc.com.pis.entity.Friendship;
-import lqc.com.pis.entity.FriendshipId;
-import lqc.com.pis.entity.User;
 import lqc.com.pis.exception.AppException;
 import lqc.com.pis.exception.ErrorCode;
 import lqc.com.pis.mapper.UserMapper;
@@ -21,8 +17,17 @@ import lqc.com.pis.service.inter.FriendService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
+import lqc.com.pis.entity.User;
+import lqc.com.pis.entity.Conversation;
+import lqc.com.pis.entity.Friendship;
+import lqc.com.pis.entity.FriendshipId;
+import lqc.com.pis.entity.ImageComment;
+import lqc.com.pis.entity.ImagePost;
+import lqc.com.pis.entity.InvalidAccessToken;
+import lqc.com.pis.entity.Message;
+import lqc.com.pis.entity.Post;
+import lqc.com.pis.entity.Reaction;
+import lqc.com.pis.entity.Comment;
 @Service
 @RequiredArgsConstructor
 @Slf4j

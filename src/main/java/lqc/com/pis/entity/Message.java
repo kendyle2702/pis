@@ -3,7 +3,8 @@ package lqc.com.pis.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Nationalized;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 
@@ -11,9 +12,9 @@ import java.time.Instant;
 @Setter
 @Entity
 @Builder
-@Table(name = "message")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "message")
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,31 +22,28 @@ public class Message {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "conversation_id", nullable = false)
     private Conversation conversation;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "sender_id", nullable = false)
     private User sender;
 
-    @Nationalized
     @Column(name = "type", nullable = false, length = 50)
     private String type;
 
-    @Nationalized
     @Column(name = "url")
     private String url;
 
-    @Nationalized
-    @Lob
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, length = Integer.MAX_VALUE)
     private String content;
 
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @Nationalized
     @Column(name = "status", length = 50)
     private String status;
 

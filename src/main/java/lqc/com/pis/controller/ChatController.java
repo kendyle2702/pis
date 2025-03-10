@@ -10,9 +10,6 @@ import lqc.com.pis.dto.response.ApiResponse;
 import lqc.com.pis.dto.response.chat.ConversationCreationResponse;
 import lqc.com.pis.dto.response.chat.ConversationResponse;
 import lqc.com.pis.dto.response.chat.MessageResponse;
-import lqc.com.pis.dto.response.post.PostResponse;
-import lqc.com.pis.entity.Conversation;
-import lqc.com.pis.entity.Message;
 import lqc.com.pis.repository.MessageRepository;
 import lqc.com.pis.service.inter.ChatService;
 import org.springframework.http.HttpStatus;
@@ -21,13 +18,22 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import lqc.com.pis.entity.User;
+import lqc.com.pis.entity.Conversation;
+import lqc.com.pis.entity.Friendship;
+import lqc.com.pis.entity.FriendshipId;
+import lqc.com.pis.entity.ImageComment;
+import lqc.com.pis.entity.ImagePost;
+import lqc.com.pis.entity.InvalidAccessToken;
+import lqc.com.pis.entity.Message;
+import lqc.com.pis.entity.Post;
+import lqc.com.pis.entity.Reaction;
+import lqc.com.pis.entity.Comment;
 
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ForkJoinPool;
 
 @RestController
 @RequestMapping("/conversations")

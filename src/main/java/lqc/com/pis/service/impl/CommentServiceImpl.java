@@ -7,9 +7,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lqc.com.pis.dto.request.comment.CommentCreationRequest;
 import lqc.com.pis.dto.response.comment.CommentCreationResponse;
-import lqc.com.pis.entity.Comment;
-import lqc.com.pis.entity.Post;
-import lqc.com.pis.entity.User;
 import lqc.com.pis.repository.CommentRepository;
 import lqc.com.pis.service.inter.CommentService;
 import lqc.com.pis.service.inter.FileService;
@@ -17,7 +14,17 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.Optional;
+import lqc.com.pis.entity.User;
+import lqc.com.pis.entity.Conversation;
+import lqc.com.pis.entity.Friendship;
+import lqc.com.pis.entity.FriendshipId;
+import lqc.com.pis.entity.ImageComment;
+import lqc.com.pis.entity.ImagePost;
+import lqc.com.pis.entity.InvalidAccessToken;
+import lqc.com.pis.entity.Message;
+import lqc.com.pis.entity.Post;
+import lqc.com.pis.entity.Reaction;
+import lqc.com.pis.entity.Comment;
 
 @Service
 @Slf4j

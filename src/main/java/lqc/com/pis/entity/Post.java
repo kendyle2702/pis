@@ -3,7 +3,8 @@ package lqc.com.pis.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Nationalized;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 
@@ -11,9 +12,9 @@ import java.time.Instant;
 @Setter
 @Entity
 @Builder
-@Table(name = "post")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "post")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,23 +22,20 @@ public class Post {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Nationalized
     @Column(name = "type", nullable = false, length = 50)
     private String type;
 
-    @Nationalized
-    @Lob
-    @Column(name = "content")
+    @Column(name = "content", length = Integer.MAX_VALUE)
     private String content;
 
-    @Nationalized
     @Column(name = "mode", nullable = false, length = 50)
     private String mode;
 
-    @ColumnDefault("getdate()")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "create_at")
     private Instant createAt;
 

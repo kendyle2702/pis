@@ -14,7 +14,7 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:Password789}
     driver-class-name: org.postgresql.Driver
   jpa:
-    database-platform: org.hibernate.dialect.SQLServerDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none  # create, update, validate, none
     show-sql: true
