@@ -1,4 +1,4 @@
-# Person Instance Share (PIS) Backend
+# Person Instant Share (PIS) Backend
 
 ## Description
 PIS is a social networking project that divides both private and public functions to give users a better experience.
