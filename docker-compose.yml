@@ -1,31 +1,30 @@
 
 services:
-  ### DATABASE: SQL SERVER ###
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    container_name: sqlserver_container
+  ### DATABASE: PostgreSQL ###
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_container
     restart: always
     ports:
-      - "1433:1433"
+      - "5432:5432"
     environment:
-      MSSQL_SA_PASSWORD: "Password789"
-      ACCEPT_EULA: "Y"
+        POSTGRES_USER: admin
+        POSTGRES_PASSWORD: Password789
     volumes:
-      - mssql_data:/var/opt/mssql
-      - ./init-scripts:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/custom-scripts
 
-    entrypoint: [ "/bin/bash", "-c", "/docker-entrypoint-initdb.d/init-db.sh & exec /opt/mssql/bin/sqlservr" ]
+    entrypoint: [ "/bin/bash", "-c", "/custom-scripts/init-db.sh & exec docker-entrypoint.sh postgres" ]
 
     healthcheck:
-      test: [ "CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "SA", "-P", "Password789", "-Q", "SELECT name FROM sys.databases WHERE name = 'pis'", "-N", "o" ]
+      test: ["CMD-SHELL", "pg_isready -U admin -d pis"]
       interval: 10s
       timeout: 10s
       retries: 5
-
     networks:
       - springboot-network
 
-  ### BACKEND: SPRING BOOT ###
+  ### BACKEND: Spring Boot ###
   springboot:
     build: .
     container_name: springboot_container
@@ -33,13 +32,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:sqlserver://sqlserver:1433;databaseName=pis;encrypt=true;trustServerCertificate=true
-      SPRING_DATASOURCE_USERNAME: SA
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pis
+      SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: Password789
     depends_on:
-      sqlserver:
+      postgres:
         condition: service_healthy
-
     networks:
       - springboot-network
 
@@ -47,4 +45,4 @@ networks:
   springboot-network:
 
 volumes:
-  mssql_data:
+  postgres_data:

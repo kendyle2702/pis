@@ -12,7 +12,7 @@ spring:
     url:  ${SPRING_DATASOURCE_URL:jdbc:sqlserver://localhost:1433;databaseName=pis;encrypt=true;trustServerCertificate=true}
     username: ${SPRING_DATASOURCE_USERNAME:SA}
     password: ${SPRING_DATASOURCE_PASSWORD:Password789}
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.SQLServerDialect
     hibernate:
