@@ -16,7 +16,7 @@ PIS is a social networking project that divides both private and public function
 - Spring Boot 3.2.0 (Java 17)
 - Bcrypt
 - JWT
-- SQL Server 2019
+- PostgreSQL 15
 
 ---
 
