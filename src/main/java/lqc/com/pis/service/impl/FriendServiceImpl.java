@@ -428,6 +428,35 @@ public class FriendServiceImpl implements FriendService {
         friendShipRepository.delete(friendship2);
     }
 
+    @Override
+    public List<UserResponse> getRequestFriends(Long userId) {
+        List<Friendship> filteredFriendships = friendShipRepository.findByUserId(userId).stream()
+                .filter(f -> "FRIEND".equals(f.getId().getFriendType()) && Boolean.FALSE.equals(f.getIsFriend()) && Boolean.FALSE.equals(f.getIsBlock()))
+                .toList();
+        return filteredFriendships.stream().map(
+                friendship -> {
+                    UserResponse userResponse = userMapper.toUserResponse(friendship.getFriend());
+                    userResponse.setIsFollowing(null);
+                    userResponse.setIsFriend(null);
+                    userResponse.setIsSendRequest(null);
+                    userResponse.setIsBlock(null);
+                    return userResponse;
+                }).toList();
+    }
 
-
+    @Override
+    public List<UserResponse> getBlockFriends(Long userId) {
+        List<Friendship> filteredFriendships = friendShipRepository.findByUserId(userId).stream()
+                .filter(f -> "FRIEND".equals(f.getId().getFriendType()) && Boolean.TRUE.equals(f.getIsBlock()))
+                .toList();
+        return filteredFriendships.stream().map(
+                friendship -> {
+                    UserResponse userResponse = userMapper.toUserResponse(friendship.getFriend());
+                    userResponse.setIsFollowing(null);
+                    userResponse.setIsFriend(null);
+                    userResponse.setIsSendRequest(null);
+                    userResponse.setIsBlock(null);
+                    return userResponse;
+                }).toList();
+    }
 }

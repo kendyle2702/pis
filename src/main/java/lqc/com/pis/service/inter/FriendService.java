@@ -19,5 +19,6 @@ public interface FriendService {
     void unfriend(FriendActionRequest request);
     void blockFriend(FriendActionRequest request);
     void unblockFriend(FriendActionRequest request);
-
+    List<UserResponse> getRequestFriends(Long userId);
+    List<UserResponse> getBlockFriends(Long userId);
 }

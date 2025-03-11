@@ -150,6 +150,26 @@ public class FriendController {
         );
     }
 
+    //get list request friend
+    @GetMapping("/requestFriends/{userId}")
+    ResponseEntity<ApiResponse<List<UserResponse>>> getRequestFriends(@PathVariable("userId") Long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<List<UserResponse>>builder()
+                        .code(2000)
+                        .data(friendService.getRequestFriends(userId)).build()
+        );
+    }
+
+    //get list block friend
+    @GetMapping("/blockFriends/{userId}")
+    ResponseEntity<ApiResponse<List<UserResponse>>> getBlockFriends(@PathVariable("userId") Long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<List<UserResponse>>builder()
+                        .code(2000)
+                        .data(friendService.getBlockFriends(userId)).build()
+        );
+    }
+
 
 
 }
