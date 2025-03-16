@@ -51,6 +51,7 @@ public class FriendServiceImpl implements FriendService {
                     userResponse.setIsFriend(null);
                     userResponse.setIsSendRequest(null);
                     userResponse.setIsBlock(null);
+                    userResponse.setIsBlocked(null);
                     return userResponse;
                 }).toList();
     }
@@ -65,7 +66,8 @@ public class FriendServiceImpl implements FriendService {
         userResponse.setIsFollowing(friendShipRepository.existsFriendship((long) request.getFriendId(), (long) request.getUserId(), "FOLLOW") > 0);
         userResponse.setIsFriend(friendShipRepository.isFriend((long) request.getUserId(), (long) request.getFriendId(), "FRIEND") >0);
         userResponse.setIsSendRequest(friendShipRepository.isSendRequestFriend((long) request.getUserId(), (long) request.getFriendId(), "FRIEND") >0);
-        userResponse.setIsBlock(friendShipRepository.isBlockFriend((long) request.getUserId(), (long) request.getFriendId(), "FRIEND") >0);
+        userResponse.setIsBlock(friendShipRepository.isBlockToFriend((long) request.getUserId(), (long) request.getFriendId(), "FRIEND") >0);
+        userResponse.setIsBlocked(friendShipRepository.isBlocked((long) request.getUserId(), (long) request.getFriendId(), "FRIEND") >0);
         return userResponse;
     }
 
@@ -107,17 +109,17 @@ public class FriendServiceImpl implements FriendService {
         boolean isBlock =
                 friendShipRepository.isBlockFriend(
                         (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isBlockFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        friendShipRepository.isBlockFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
         boolean isRequestFriend =
-                friendShipRepository.isSendRequestFriend(
-                        (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isSendRequestFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                friendShipRepository.isSendRequestFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+
+        boolean isSendedRequestFriend = friendShipRepository.isSendRequestFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
         boolean isFriend =
                 friendShipRepository.isFriend(
                         (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        friendShipRepository.isFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
         if(isBlock){
             throw new AppException(ErrorCode.HAVE_BLOCK);
@@ -127,23 +129,18 @@ public class FriendServiceImpl implements FriendService {
             throw new AppException(ErrorCode.HAVE_REQUEST_FRIEND);
         }
 
+        if(isSendedRequestFriend){
+            throw new AppException(ErrorCode.HAVE_SENDED_REQUEST_FRIEND);
+        }
+
         if(isFriend){
             throw new AppException(ErrorCode.HAVE_FRIEND);
         }
 
 
-        User user1 = entityManager.getReference(User.class, request.getUserId());
         User user2 = entityManager.getReference(User.class, request.getFriendId());
 
-        User friend1 = entityManager.getReference(User.class, request.getFriendId());
         User friend2 = entityManager.getReference(User.class, request.getUserId());
-
-        Friendship friendship1 = new Friendship();
-        friendship1.setId(friendshipId1);
-        friendship1.setUser(user1);
-        friendship1.setFriend(friend1);
-        friendship1.setIsFriend(false);
-        friendship1.setIsBlock(false);
 
         Friendship friendship2 = new Friendship();
         friendship2.setId(friendshipId2);
@@ -152,7 +149,6 @@ public class FriendServiceImpl implements FriendService {
         friendship2.setIsFriend(false);
         friendship2.setIsBlock(false);
 
-        friendShipRepository.save(friendship1);
         friendShipRepository.save(friendship2);
 
     }
@@ -164,19 +160,18 @@ public class FriendServiceImpl implements FriendService {
 
 
         boolean isRequestFriend =
-                friendShipRepository.isSendRequestFriend(
-                        (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isSendRequestFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                friendShipRepository.isSendRequestFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+
 
         boolean isFriend =
                 friendShipRepository.isFriend(
                         (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        friendShipRepository.isFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
         boolean isBlock =
                 friendShipRepository.isBlockFriend(
                         (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isBlockFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        friendShipRepository.isBlockFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
 
         if(isBlock){
@@ -191,14 +186,9 @@ public class FriendServiceImpl implements FriendService {
             throw new AppException(ErrorCode.HAVE_NOT_REQUEST_FRIEND);
         }
 
-
-        Friendship friendship1 = friendShipRepository.findById(friendshipId1)
-                .orElseThrow(() -> new AppException(ErrorCode.HAVE_NOT_REQUEST_FRIEND));
         Friendship friendship2 = friendShipRepository.findById(friendshipId2)
                 .orElseThrow(() -> new AppException(ErrorCode.HAVE_NOT_REQUEST_FRIEND));
 
-
-        friendShipRepository.delete(friendship1);
         friendShipRepository.delete(friendship2);
     }
 
@@ -211,18 +201,18 @@ public class FriendServiceImpl implements FriendService {
 
         boolean isRequestFriend =
                 friendShipRepository.isSendRequestFriend(
-                        (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isSendRequestFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        (long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
+
 
         boolean isFriend =
                 friendShipRepository.isFriend(
                         (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        friendShipRepository.isFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
         boolean isBlock =
                 friendShipRepository.isBlockFriend(
                         (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isBlockFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        friendShipRepository.isBlockFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
 
         if(isBlock){
@@ -234,18 +224,27 @@ public class FriendServiceImpl implements FriendService {
         }
 
         if (!isRequestFriend){
-            throw new AppException(ErrorCode.HAVE_NOT_REQUEST_FRIEND);
+            throw new AppException(ErrorCode.HAVE_NOT_USER_SEND_REQUEST_FRIEND);
         }
 
         Friendship friendship1 = friendShipRepository.findById(friendshipId1)
                 .orElseThrow(() -> new AppException(ErrorCode.HAVE_NOT_REQUEST_FRIEND));
-        Friendship friendship2 = friendShipRepository.findById(friendshipId2)
-                .orElseThrow(() -> new AppException(ErrorCode.HAVE_NOT_REQUEST_FRIEND));
 
         friendship1.setIsFriend(true);
-        friendship2.setIsFriend(true);
 
         friendShipRepository.save(friendship1);
+
+        User user = entityManager.getReference(User.class, request.getFriendId());
+
+        User friend = entityManager.getReference(User.class, request.getUserId());
+
+        Friendship friendship2 = new Friendship();
+        friendship2.setId(friendshipId2);
+        friendship2.setUser(user);
+        friendship2.setFriend(friend);
+        friendship2.setIsFriend(true);
+        friendship2.setIsBlock(false);
+
         friendShipRepository.save(friendship2);
     }
 
@@ -256,18 +255,17 @@ public class FriendServiceImpl implements FriendService {
 
         boolean isRequestFriend =
                 friendShipRepository.isSendRequestFriend(
-                        (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isSendRequestFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        (long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
         boolean isFriend =
                 friendShipRepository.isFriend(
                         (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        friendShipRepository.isFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
         boolean isBlock =
                 friendShipRepository.isBlockFriend(
                         (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isBlockFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        friendShipRepository.isBlockFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
 
         if(isBlock){
@@ -279,17 +277,13 @@ public class FriendServiceImpl implements FriendService {
         }
 
         if (!isRequestFriend){
-            throw new AppException(ErrorCode.HAVE_NOT_REQUEST_FRIEND);
+            throw new AppException(ErrorCode.HAVE_NOT_USER_SEND_REQUEST_FRIEND);
         }
 
         Friendship friendship1 = friendShipRepository.findById(friendshipId1)
                 .orElseThrow(() -> new AppException(ErrorCode.HAVE_NOT_REQUEST_FRIEND));
-        Friendship friendship2 = friendShipRepository.findById(friendshipId2)
-                .orElseThrow(() -> new AppException(ErrorCode.HAVE_NOT_REQUEST_FRIEND));
-
 
         friendShipRepository.delete(friendship1);
-        friendShipRepository.delete(friendship2);
     }
 
     @Override
@@ -300,12 +294,12 @@ public class FriendServiceImpl implements FriendService {
         boolean isFriend =
                 friendShipRepository.isFriend(
                         (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        friendShipRepository.isFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
         boolean isBlock =
                 friendShipRepository.isBlockFriend(
                         (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isBlockFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        friendShipRepository.isBlockFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
 
         if(isBlock){
@@ -334,8 +328,7 @@ public class FriendServiceImpl implements FriendService {
         boolean isBlock =
                 friendShipRepository.isBlockFriend(
                         (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isBlockFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
-
+                        friendShipRepository.isBlockFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
         if(isBlock){
             throw new AppException(ErrorCode.HAVE_BLOCK);
@@ -343,14 +336,15 @@ public class FriendServiceImpl implements FriendService {
 
         boolean isRequestFriend =
                 friendShipRepository.isSendRequestFriend(
-                        (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isSendRequestFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+
+        boolean isSendedRequestFriend = friendShipRepository.isSendRequestFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
+
 
         boolean isFriend =
                 friendShipRepository.isFriend(
                         (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
-
+                        friendShipRepository.isFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
 
         if(isFriend){
@@ -359,7 +353,10 @@ public class FriendServiceImpl implements FriendService {
             Friendship friendship2 = friendShipRepository.findById(friendshipId2)
                     .orElseThrow(() -> new AppException(ErrorCode.HAVE_NOT_REQUEST_FRIEND));
 
+            friendship1.setIsFriend(false);
             friendship1.setIsBlock(true);
+
+            friendship2.setIsFriend(true);
             friendship2.setIsBlock(true);
 
             friendShipRepository.save(friendship1);
@@ -367,15 +364,48 @@ public class FriendServiceImpl implements FriendService {
         }
         else{
             if (isRequestFriend){
-                Friendship friendship1 = friendShipRepository.findById(friendshipId1)
-                        .orElseThrow(() -> new AppException(ErrorCode.HAVE_NOT_REQUEST_FRIEND));
+
                 Friendship friendship2 = friendShipRepository.findById(friendshipId2)
                         .orElseThrow(() -> new AppException(ErrorCode.HAVE_NOT_REQUEST_FRIEND));
 
-                friendship1.setIsBlock(true);
                 friendship2.setIsBlock(true);
+                friendship2.setIsFriend(true);
+
+                friendShipRepository.save(friendship2);
+
+                User user = entityManager.getReference(User.class, request.getUserId());
+
+                User friend = entityManager.getReference(User.class, request.getFriendId());
+
+                Friendship friendship1 = new Friendship();
+                friendship1.setId(friendshipId1);
+                friendship1.setUser(user);
+                friendship1.setFriend(friend);
+                friendship1.setIsFriend(false);
+                friendship1.setIsBlock(true);
 
                 friendShipRepository.save(friendship1);
+            }
+            else if(isSendedRequestFriend){
+                Friendship friendship1 = friendShipRepository.findById(friendshipId1)
+                        .orElseThrow(() -> new AppException(ErrorCode.HAVE_NOT_REQUEST_FRIEND));
+
+                friendship1.setIsBlock(true);
+                friendship1.setIsFriend(false);
+
+                friendShipRepository.save(friendship1);
+
+                User user = entityManager.getReference(User.class, request.getFriendId());
+
+                User friend = entityManager.getReference(User.class, request.getUserId());
+
+                Friendship friendship2 = new Friendship();
+                friendship2.setId(friendshipId1);
+                friendship2.setUser(user);
+                friendship2.setFriend(friend);
+                friendship2.setIsFriend(true);
+                friendship2.setIsBlock(true);
+
                 friendShipRepository.save(friendship2);
             }
             else{
@@ -396,7 +426,7 @@ public class FriendServiceImpl implements FriendService {
                 friendship2.setId(friendshipId2);
                 friendship2.setUser(user2);
                 friendship2.setFriend(friend2);
-                friendship2.setIsFriend(false);
+                friendship2.setIsFriend(true);
                 friendship2.setIsBlock(true);
 
                 friendShipRepository.save(friendship1);
@@ -410,7 +440,7 @@ public class FriendServiceImpl implements FriendService {
         boolean isBlock =
                 friendShipRepository.isBlockFriend(
                         (long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0 ||
-                        friendShipRepository.isBlockFriend((long) request.getFriendId(), (long) request.getUserId(),"FRIEND") > 0;
+                        friendShipRepository.isBlockFriend((long) request.getUserId(), (long) request.getFriendId(),"FRIEND") > 0;
 
         if(!isBlock){
             throw new AppException(ErrorCode.HAVE_NOT_BLOCK);
@@ -440,22 +470,24 @@ public class FriendServiceImpl implements FriendService {
                     userResponse.setIsFriend(null);
                     userResponse.setIsSendRequest(null);
                     userResponse.setIsBlock(null);
+                    userResponse.setIsBlocked(null);
                     return userResponse;
                 }).toList();
     }
 
     @Override
     public List<UserResponse> getBlockFriends(Long userId) {
-        List<Friendship> filteredFriendships = friendShipRepository.findByUserId(userId).stream()
-                .filter(f -> "FRIEND".equals(f.getId().getFriendType()) && Boolean.TRUE.equals(f.getIsBlock()))
+        List<Friendship> filteredFriendships = friendShipRepository.findByFriendId(userId).stream()
+                .filter(f -> "FRIEND".equals(f.getId().getFriendType()) && Boolean.TRUE.equals(f.getIsBlock()) &&  Boolean.TRUE.equals(f.getIsFriend()))
                 .toList();
         return filteredFriendships.stream().map(
                 friendship -> {
-                    UserResponse userResponse = userMapper.toUserResponse(friendship.getFriend());
+                    UserResponse userResponse = userMapper.toUserResponse(friendship.getUser());
                     userResponse.setIsFollowing(null);
                     userResponse.setIsFriend(null);
                     userResponse.setIsSendRequest(null);
                     userResponse.setIsBlock(null);
+                    userResponse.setIsBlocked(null);
                     return userResponse;
                 }).toList();
     }

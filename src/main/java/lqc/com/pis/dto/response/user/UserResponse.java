@@ -29,4 +29,5 @@ public class UserResponse {
     Boolean isFriend;
     Boolean isSendRequest;
     Boolean isBlock;
+    Boolean isBlocked;
 }

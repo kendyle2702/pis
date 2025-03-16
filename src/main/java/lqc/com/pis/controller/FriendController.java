@@ -169,7 +169,4 @@ public class FriendController {
                         .data(friendService.getBlockFriends(userId)).build()
         );
     }
-
-
-
 }

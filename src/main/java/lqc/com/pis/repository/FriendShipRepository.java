@@ -25,11 +25,16 @@ public interface FriendShipRepository extends JpaRepository<Friendship, Friendsh
     @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM friendship f WHERE f.user_id = :userId AND f.friend_id = :friendId AND f.friend_type = :friendType AND f.is_block=TRUE", nativeQuery = true)
     int isBlockFriend(@Param("userId") Long userId, @Param("friendId") Long friendId, @Param("friendType") String friendType);
 
+    @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM friendship f WHERE f.user_id = :userId AND f.friend_id = :friendId AND f.friend_type = :friendType AND f.is_block=TRUE AND f.is_friend = FALSE", nativeQuery = true)
+    int isBlockToFriend(@Param("userId") Long userId, @Param("friendId") Long friendId, @Param("friendType") String friendType);
+
+    @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM friendship f WHERE f.user_id = :userId AND f.friend_id = :friendId AND f.friend_type = :friendType AND f.is_block=TRUE AND f.is_friend = TRUE", nativeQuery = true)
+    int isBlocked(@Param("userId") Long userId, @Param("friendId") Long friendId, @Param("friendType") String friendType);
 
 
 
     List<Friendship> findByUserId(Long userId);
-
+    List<Friendship> findByFriendId(Long friendId);
 
     @Query(value = "SELECT COUNT(*) FROM friendship WHERE user_id = :userId AND friend_type = :friendType", nativeQuery = true)
     Long countByUserIdAndFriendType(@Param("userId") Long userId, @Param("friendType") String friendType);
