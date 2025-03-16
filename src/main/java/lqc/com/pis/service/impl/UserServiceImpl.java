@@ -90,6 +90,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserUpdateResponse updateQr(Long userId, MultipartFile avatarFile) throws IOException {
+        User user = getUserById(userId);
+
+        String url = fileService.uploadFile(avatarFile);
+
+        user.setQrCode(url);
+
+        userRepository.save(user);
+
+        return userMapper.toUserUpdateResponse(user);
+    }
+
+    @Override
     public FollowResponse getFollow(Long userId) {
         Long followers = friendShipRepository.countByUserIdAndFriendType(userId,"FOLLOW");
         Long following = friendShipRepository.countByFriendIdAndFriendType(userId,"FOLLOW");

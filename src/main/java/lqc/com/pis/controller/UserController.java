@@ -87,4 +87,12 @@ public class UserController {
         );
     }
 
+    @PostMapping("/qr/{userId}")
+    public ResponseEntity<ApiResponse<UserUpdateResponse>> updateQr(@PathVariable("userId") Long userId, @RequestParam("file") MultipartFile file) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<UserUpdateResponse>builder()
+                        .code(2000)
+                        .data(userService.updateQr(userId,file)).build()
+        );
+    }
 }

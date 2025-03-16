@@ -15,6 +15,7 @@ public interface UserService {
     List<User> getUsers();
     UserUpdateResponse updateUserPartial(Long userId, UserUpdateRequest userUpdateRequest);
     UserUpdateResponse updateAvatar(Long userId, MultipartFile avatarFile) throws IOException;
+    UserUpdateResponse updateQr(Long userId, MultipartFile avatarFile) throws IOException;
 
     FollowResponse getFollow(Long userId);
     List<UserPostResponse> searchUsersInPublic(String request, String userId);
