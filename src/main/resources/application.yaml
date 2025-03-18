@@ -1,11 +1,13 @@
 server:
-  port: 8443
+  port: 443
   ssl:
     enabled: true
     key-store: file:/etc/ssl/keystore.p12  # Đường dẫn đến keystore
-    key-store-password: your_password  # Mật khẩu đã đặt khi tạo keystore
+    key-store-password: 123456  # Mật khẩu đã đặt khi tạo keystore
     key-store-type: PKCS12
     key-alias: tomcat  # Alias khi export file keystore
+
+  
   servlet:
     context-path: /api/v1
 spring:

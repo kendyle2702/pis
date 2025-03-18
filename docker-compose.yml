@@ -30,7 +30,7 @@ services:
     container_name: springboot_container
     restart: always
     ports:
-      - "8080:8080"
+      - "443:443"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pis
       SPRING_DATASOURCE_USERNAME: admin
@@ -38,6 +38,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    volumes:
+      - /etc/ssl/keystore.p12:/etc/ssl/keystore.p12
     networks:
       - springboot-network
 
