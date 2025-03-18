@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -37,8 +38,22 @@ public class SecurityConfig {
                         .decoder(customJwtDecoder))
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
 
+        httpSecurity
+                .csrf(csrf -> csrf.disable()) // Tắt CSRF vì API không cần
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin()) // Hỗ trợ iframe nếu cần
+                );
+
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();
+    }
+
+    /**
+     * 🔥 Quan trọng: Kích hoạt Forwarded Header Filter để hỗ trợ `X-Forwarded-Proto`
+     */
+    @Bean
+    public ForwardedHeaderFilter forwardedHeaderFilter() {
+        return new ForwardedHeaderFilter();
     }
 
 }
